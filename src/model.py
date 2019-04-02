@@ -1,4 +1,12 @@
+# Libraries
+import numpy as np
+
+# Own modules
 from agent import Agent
+from parameters import parameters as par
+from modules.utils import hermgauss_lognorm
+
+
 
 class Model(Agent):
 
@@ -7,9 +15,22 @@ class Model(Agent):
 
 
     @staticmethod
-    def create_grids():
+    def create_a_grid():
 
-        # Grid 1: Assets
+        # Grid: Assets
+        grid_a_temp = np.linspace(par.a_min, par.a_max**par.a_tuning, par.Na)
+        grid_a = grid_a_temp ** (1/par.a_tuning)
+
+        # Shocks
+
+
+
+
+
+
+
+
+
 
 
 # %% For Jeppe

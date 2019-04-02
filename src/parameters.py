@@ -1,5 +1,5 @@
 # Singleton Pattern
-
+import numpy as np
 from modules.utils import Struct
 
 parameters = Struct()
@@ -17,3 +17,12 @@ parameters.c_d = 4 #value not from paper, Fixed cost of investing in financial k
 parameters.start_age = 25
 parameters.retire_age = 65
 parameters.max_age = 90
+
+# Asset grid
+parameters.a_min = 0
+parameters.a_max = 500000 # Arbitrary set by Ditlev
+parameters.Na = 40 # From paper
+parameters.a_tuning = 0.3 # From paper
+
+# Consumption grid
+parameters.Ca = 15
