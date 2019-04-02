@@ -17,3 +17,5 @@ parameters.c_d = 4 #value not from paper, Fixed cost of investing in financial k
 parameters.start_age = 25
 parameters.retire_age = 65
 parameters.max_age = 90
+
+par.Na = 40 #found in paper
