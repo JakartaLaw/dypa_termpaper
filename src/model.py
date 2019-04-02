@@ -7,4 +7,6 @@ class Model(Agent):
 
 
     @staticmethod
-    def greate_grids():
+    def create_grids():
+
+        # Grid 1: Assets
