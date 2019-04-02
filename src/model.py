@@ -21,7 +21,8 @@ class Model(Agent):
         grid_a_temp = np.linspace(par.a_min, par.a_max**par.a_tuning, par.Na)
         grid_a = grid_a_temp ** (1/par.a_tuning)
 
-        # Shocks
+    def create_f_grid():
+        # Grid financial knowledge
 
 
 

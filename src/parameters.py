@@ -26,3 +26,5 @@ parameters.a_tuning = 0.3 # From paper
 
 # Consumption grid
 parameters.Ca = 15
+
+# Financial grid
