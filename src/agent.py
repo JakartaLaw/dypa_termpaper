@@ -1,4 +1,4 @@
-class Model():
+class Agent():
 
     def __init__(self, par, state):
         self.par = par
@@ -42,6 +42,7 @@ class Model():
     # Cost function for financial knowledge (p. 451, bottom). Combining both fixed and variable
     @staticmethod
     def pi_cost(i):
-        fixed = 750 * (i > 0)
-        variable = 50*(i**1.75)
+        # constants are derived from the paper
+        fixed = 750 * (i > 0) #c_d in paper
+        variable = 50*(i**1.75) #pi in paper
         return fixed + variable
