@@ -7,9 +7,12 @@ Use sublime text and latex-tools. Compile wiht `cmd-b`
 
 # Installing Kernel
 
-Use pipenv to install dependencies
+Use pipenv to install dependencies:
+- Navigate to the root directory of this folder. The **Pipfile** should be located at your path.
+- Run the command: `pipenv install Pipfile` to install the python dependencies
 
-Run following command in terminal: `pipenv run python -m ipykernel install --user --name=datascience --display-name "Python 3 (dypa-termpaper)`
+Installing the kernel:
+- Run following command in terminal: `pipenv run python -m ipykernel install --user --name=datascience --display-name "Python 3 (dypa-termpaper)`
 
 # Motivation
 
