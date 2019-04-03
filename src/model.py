@@ -75,6 +75,17 @@ class Model(Agent):
         sol.m = dict()
         sol.c = dict()
 
+        # 2. last period (= consume all)
+
+        sol.m[par.T] = np.linspace(0, par.a_max, par.Na)
+        sol.c[par.T] = np.linspace(0, par.a_max, par.Na)
+
+        # 2 Before last Period
+        for t in reversed(range(1,par.T)): # Start in period T-1
+
+            #a) Interpolant
+
+
             # State Space
             for a_j in a_grid:
                 for f_j in f_grid:
@@ -83,26 +94,9 @@ class Model(Agent):
                     c_grid, j_gti = create_c_grid(a_i)
                     j_grid = create_j_grid()
                     for c_i in c_grid:
+                        pass
 
-    # 2. last period (= consume all)
-
-    sol.m[par.T] = np.linspace(0, par.a_max, par.Na)
-    sol.c[par.T] = np.linspace(0, par.a_max, par.Na)
-
-    # 2 Before last Period
-    for t in reversed(range(1,par.T)): # Start in period T-1
-
-        #a) Interpolant
-        par.c_plus_interp = interpolate.interp1d(sol.m[t+1], sol.c[t+1], kind='linear', fill_value = "extrapolate")
-
-        #b) EGM
-        sol_c, sol_m = cls.EGM(sol, t, par.c_plus_interp, par)
-
-        #c) Add zero Consumption
-        sol.m[t] = np.append(par.a_min[t], sol_m)
-        sol.c[t] = np.append(0, sol_c)
-
-    return(sol)
+        return(sol)
 
 @staticmethod
 def simulate(par,sol):
