@@ -16,14 +16,18 @@ class Model(Agent):
 
     @staticmethod
     def create_a_grid():
-
-        # Grid: Assets
+        # Grid assets
         grid_a_temp = np.linspace(par.a_min, par.a_max**par.a_tuning, par.Na)
         grid_a = grid_a_temp ** (1/par.a_tuning)
 
+    @staticmethod
     def create_f_grid():
         # Grid financial knowledge
+        grid_f = np.linspace(par.f_min, par.f_max, par.Nf)
 
+    @staticmethod
+    def create_gauss_hermite():
+        
 
 
 

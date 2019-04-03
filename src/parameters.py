@@ -28,3 +28,7 @@ parameters.a_tuning = 0.3 # From paper
 parameters.Ca = 15
 
 # Financial grid
+## We let i be binary, so one can only accumulate max_age-start_age divided by the corresponding delta
+parameters.f_min = 0
+parameters.f_max = parameters.max_age - parameters.start_age
+parameters.Nf = 25 # From paper
