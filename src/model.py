@@ -13,14 +13,23 @@ class Model(Agent):
 
 
     # For Jeppe
-    def create_c_grid(self, a_i):
+    def create_c_grid(self, a_j):
         """
         Parameters
         ==========
         a_i : float
             the maximum of the consumption grid, for given amount of assets
         """
-        return np.linspace(0, a_i, self.par.Nc)
+        return np.linspace(0, a_j, self.par.Nc)
+
+    def create_f_grid(self, f_j):
+        """
+        Parameters
+        ==========
+        a_i : float
+            the maximum of the consumption grid, for given amount of assets
+        """
+        return np.linspace(0, a_j, self.par.Nc)
 
     @staticmethod
     def consumption_interp(sol, t):
@@ -32,6 +41,7 @@ class Model(Agent):
 
     def solve(self, cls, par):
         # note: possibly use numpy 2d array for solving this with numba integration
+        # note: we use j, as index variable in loops
 
         # 1. allocation solution struct and cells
         sol = Struct()
@@ -53,13 +63,13 @@ class Model(Agent):
             f_plus_interp = self.financial_interp(sol, t)
 
             # State Space
-            for a_i in a_grid:
-                for f_i in f_grid()
+            for a_j in a_grid:
+                for f_j in f_grid:
 
-                # control variable space
-                c_grid, j_gti = create_c_grid(a_i)
-                j_grid = create_j_grid()
-                for c_i in c_grid:
+                    # control variable space
+                    c_grid, j_gti = create_c_grid(a_i)
+                    j_grid = create_j_grid()
+                    for c_i in c_grid:
 
 
 
