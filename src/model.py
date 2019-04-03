@@ -23,6 +23,9 @@ class Model(Agent):
         # Grid financial knowledge
         grid_f = np.linspace(self.par.f_min, self.par.f_max, self.par.Nf)
 
+    def create_c_grid(self):
+        pass
+        
     @staticmethod
     def create_gauss_hermite():
 
