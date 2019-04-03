@@ -14,43 +14,22 @@ class Model(Agent):
         super().__init__(par=par, state=state)
 
 
-    @staticmethod
-    def create_a_grid():
+    def create_a_grid(self):
         # Grid assets
-        grid_a_temp = np.linspace(par.a_min, par.a_max**par.a_tuning, par.Na)
-        grid_a = grid_a_temp ** (1/par.a_tuning)
+        grid_a_temp = np.linspace(self.par.a_min, self.par.a_max**self.par.a_tuning, self.par.Na)
+        grid_a = grid_a_temp ** (1/self.par.a_tuning)
 
-    @staticmethod
-    def create_f_grid():
+    def create_f_grid(self):
         # Grid financial knowledge
-        grid_f = np.linspace(par.f_min, par.f_max, par.Nf)
+        grid_f = np.linspace(self.par.f_min, self.par.f_max, self.par.Nf)
 
     @staticmethod
     def create_gauss_hermite():
 
 
     # For Jeppe
-    def create_c_grid(self, a_j):
-        """
-        Parameters
-        ==========
-        a_i : float
-            the maximum of the consumption grid, for given amount of assets
-        """
-        return np.linspace(0, a_j, self.par.Nc)
 
-    def create_f_grid(self, f_j):
-        """
-        Parameters
-        ==========
-        a_i : float
-            the maximum of the consumption grid, for given amount of assets
-        """
-        return np.linspace(0, a_j, self.par.Nc)
-
-
-
-    def solve(self, cls, par):
+    def solve(self, par):
         # note: possibly use numpy 2d array for solving this with numba integration
         # note: we use j, as index variable in loops
 
@@ -58,8 +37,6 @@ class Model(Agent):
         sol = Struct()
         sol.m = dict()
         sol.c = dict()
-
-
 
             # State Space
             for a_j in a_grid:
