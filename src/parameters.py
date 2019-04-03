@@ -32,3 +32,7 @@ parameters.Ca = 15
 parameters.f_min = 0
 parameters.f_max = parameters.max_age - parameters.start_age
 parameters.Nf = 25 # From paper
+
+# Gauss Hermite
+parameters.Nnu_y = 8
+parameters.sigma_nu_y = 1 # Set arbitrary for now
