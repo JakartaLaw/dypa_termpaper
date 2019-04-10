@@ -1,6 +1,8 @@
 # Term Paper for Dynamic Programming
 
-[![Build Status](https://travis-ci.com/JakartaLaw/dypa_termpaper.svg?branch=master)](https://travis-ci.com/JakartaLaw/dypa_termpaper)
+master status: [![Build Status](https://travis-ci.com/JakartaLaw/dypa_termpaper.svg?branch=master)](https://travis-ci.com/JakartaLaw/dypa_termpaper)
+
+develop status: [![Build Status](https://travis-ci.com/JakartaLaw/dypa_termpaper.svg?branch=develop)](https://travis-ci.com/JakartaLaw/dypa_termpaper)
 
 # Compiling Latex
 
