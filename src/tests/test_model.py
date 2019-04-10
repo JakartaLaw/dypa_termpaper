@@ -7,11 +7,11 @@ from modules.utils import Struct
 @pytest.fixture
 def dummy_model():
     state = Struct()
-    return Model(par=par, state=state)
+    return Model(par=par, state=state, education_lvl='HS')
 
 def test_can_call_model():
     state = Struct()
-    model = Model(par=par, state=state)
+    model = Model(par=par, state=state, education_lvl='HS')
 
 def test_can_interpolate(dummy_model):
     f = dummy_model.create_interp([1, 2, 3], [5,6,7])

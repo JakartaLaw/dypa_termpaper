@@ -18,6 +18,9 @@ parameters.start_age = 25
 parameters.retire_age = 65
 parameters.max_age = 90
 
+#utility function parameters
+parameters.n = [1 for x in range(91)]
+
 # Asset grid
 parameters.a_min = 0
 parameters.a_max = 500000 # Arbitrary set by Ditlev
@@ -32,6 +35,7 @@ parameters.mu_min = -10
 parameters.mu_max = 10
 parameters.Nmu = 25
 
+parameters.rho_u = 0.96
 # Financial grid
 ## We let i be binary, so one can only accumulate max_age-start_age divided by the corresponding delta
 parameters.f_min = 0

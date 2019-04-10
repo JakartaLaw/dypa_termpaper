@@ -9,10 +9,10 @@ from modules.utils import Struct
 def ma():
     #agent for test suite
     state = Struct()
-    return Agent(par=par, state=state)
+    return Agent(par=par, state=state, education_lvl='HS')
 
 @pytest.fixture
 def mf():
     #model for test suite
     state = Struct()
-    return Model(par=par, state=state)
+    return Model(par=par, state=state, education_lvl='HS')
