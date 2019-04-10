@@ -1,5 +1,6 @@
 # Libraries
 import numpy as np
+from scipy import interpolate
 
 # Own modules
 from agent import Agent
@@ -25,11 +26,18 @@ class Model(Agent):
     def create_c_grid(self):
         pass
 
+    def create_mu_grid(self):
+        grid_mu = np.linspace(self.par.mu_min, self.par.mu_max, self.par.Nmu)
+
     @staticmethod
     def create_gauss_hermite():
         par.nu_y, par.nu_y_w = hermgauss_lognorm(par.Nnu_y, par.sigma_nu_y)
 
     # For Jeppe
+    @staticmethod
+    def create_interp(x_vals, y_vals):
+        """Returns function which interpolates"""
+        return interpolate.interp1d(x_vals, y_vals, kind='linear', fill_value = "extrapolate")
 
     def solve(self, par):
         # note: possibly use numpy 2d array for solving this with numba integration
@@ -49,7 +57,6 @@ class Model(Agent):
         for t in reversed(range(1,par.T)): # Start in period T-1
 
             #a) Interpolant
-
 
             # State Space
             for a_j in a_grid:
