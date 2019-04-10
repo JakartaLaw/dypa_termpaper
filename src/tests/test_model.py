@@ -15,4 +15,4 @@ def test_can_call_model():
 
 def test_can_interpolate(dummy_model):
     f = dummy_model.create_interp([1, 2, 3], [5,6,7])
-    assert f(2.5) == pytest.approx(6.5) 
+    assert f(2.5) == pytest.approx(6.5)
