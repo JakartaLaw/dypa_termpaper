@@ -72,8 +72,10 @@ class Model(Agent):
 
         # 1. allocation solution struct and cells
         sol = Struct()
-        sol.m = dict()
+        # Three solution paths: assets, consumption and investment. Kappa ommitted for now.
+        sol.a = dict()
         sol.c = dict()
+        sol.i = dict()
 
             # State Space
             for a_j in a_grid:
@@ -85,15 +87,14 @@ class Model(Agent):
                     for c_i in c_grid:
 
     # 2. last period (= consume all)
-
-    sol.m[par.T] = np.linspace(0, par.a_max, par.Na)
-    sol.c[par.T] = np.linspace(0, par.a_max, par.Na)
+    sol.m[par.T] = grid_a # Grid created earlier
+    sol.c[par.T] = grid_a
 
     # 2 Before last Period
     for t in reversed(range(1,par.T)): # Start in period T-1
 
         #a) Interpolant
-        par.c_plus_interp = interpolate.interp1d(sol.m[t+1], sol.c[t+1], kind='linear', fill_value = "extrapolate")
+        par.c_plus_interp = interpolate.interp1d(sol.a[t+1], sol.c[t+1], kind='linear', fill_value = "extrapolate")
 
         #b) EGM
         sol_c, sol_m = cls.EGM(sol, t, par.c_plus_interp, par)
@@ -103,6 +104,18 @@ class Model(Agent):
         sol.c[t] = np.append(0, sol_c)
 
     return(sol)
+
+
+
+
+
+
+
+
+
+
+
+
 
 @staticmethod
 def simulate(par,sol):

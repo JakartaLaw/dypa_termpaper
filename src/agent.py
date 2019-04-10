@@ -43,6 +43,9 @@ class Agent():
     @staticmethod
     def pi_cost(i):
         # constants are derived from the paper
-        fixed = 750 * (i > 0) #c_d in paper
-        variable = 50*(i**1.75) #pi in paper
-        return fixed + variable
+        return 50*(i**1.75)
+
+    @staticmethod
+    def kappa_cost(kappa):
+        # constants are derived from the paper
+        return 750 * (kappa > 0)
