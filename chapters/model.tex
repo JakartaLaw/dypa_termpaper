@@ -4,13 +4,13 @@
 Our state space contains the following variables:
 
 \begin{equation}
-    s = (a_t, f_t, e)
+    s = (a_t, f_t, \eta_t, e)
 \end{equation}
 
-Where $e$ is the education level which stays constant throughout the life cycle of an agent, $a$ is the assets accumulated at time $t$, and $f$ is the accumulated financial knowledge accumulated at period $t$.
+Where $e$ is the education level which stays constant throughout the life cycle of an agent, $a$ is the assets accumulated at time $t$, and $f$ is the accumulated financial knowledge accumulated at period $t$. $\eta_t$ is the sum of the transatory shock and the accumulated persistent shock.
 
 We make a couple of simplifications compared to the original paper, mainly due to reducing the computational load when solving the model. An elaboration of our choice variables are presented below:
-We have 4 choice variables: $ c, i, \kappa, \psi$ The consumption is denoted by $c$, and is made with a grid of 40 points. These 40 points are fractions of the assets accumulated at time $t$. This follows the paper exactly. The variable $i \in \{0, 1\}$ is a binary choice to whether or not to invest in capital. This contrasts the original paper, where the investment is considered to be an continous variable, which are discretized into 25 points when implemented. The variable $\kappa \in \{0, \frac{1}{5}, \frac{2}{5}, \frac{3}{5}, \frac{4}{5} , 1\}$ is the share of assets to be invested in the risk free asset. This implies that $(1 - \kappa)$ will be invested in the risky asset. We assume in this implementation, that the $\kappa$-grid only contains five points. This is also a simplification compared to the original paper. The saving is denoted with $\psi$. The saving can be modelled as the residual i.e. we only need to consider the three choice variables:
+We have 4 choice variables: $ c, i, \kappa, \psi$ The consumption is denoted by $c$, and is made with a grid of 40 points. These 40 points are fractions of the assets accumulated at time $t$. This follows the paper exactly. The variable $i \in \{0, 1\}$ is a binary choice to whether or not to invest in capital. This contrasts the original paper, where the investment is considered to be an continous variable, which are discretized into 25 points when implemented. The variable $\kappa_t \in \{0 , 0.55\}$ is the share of assets to be invested in the risky asset conditional on having investing in the risky asset. This implies that $(1 - \kappa)$ will be invested in the risky asset. We assume in this implementation that $\kappa$ is fixed. This is also a simplification compared to the original paper. The saving is denoted with $\psi$. The saving can be modelled as the residual i.e. we only need to consider the three choice variables:
 
 \begin{equation}
     \text{choice variables} = c, i, \kappa
@@ -20,14 +20,16 @@ We have 4 choice variables: $ c, i, \kappa, \psi$ The consumption is denoted by 
 
 \begin{align}
     V_t(s_t) &= \underset{c_t, i_t, \kappa_t}{\max} u(c_t) + \beta \E [V_{t+1}(s_{t+1})] \\
-    a_{t+1} &= \tilde{R}_t [a_t + y_t - c_t - \pi(i_t)] \\
+    a_{t+1} &= \tilde{R}_t [a_t + y_t - c_t - \pi(i_t) - c_d I(k_t \neq 0)] \\
     f_{t+1} &= (1-\delta)f_t + i_t \\
     \tilde{R}_t &= (1-\kappa_t) R^{\text{riskfree}} + \kappa_t R^{\text{riskful}}(f_t) \\
     R^{\text{riskful}}(f_{t+1}) &= \bar{r} + r(f_t) + \sigma_{\epsilon} \epsilon_t & \sigma_\epsilon = 0.16 \\
     r(f_t) &= f_t^{\alpha}, &\alpha = 1, r(f_t)\in [0, 0.04] \\
     \pi(i_t) &= \omega \cdot i_t \\
-    \log y_t &= g_{y, t}(t) + \nu_{t} &\nu_{t} \sim N(0, \sigma_y) \\
-    g_{y,t}(t) &= \text{TO COME}\\
+    \log y_t &= g_{y, t}(t) + \eta_{t} &\nu_{t} \sim N(0, \sigma_y) \\
+    \eta_t &= \mu_{t} + \nu_t &\nu_t \sim N(0, \sigma_\nu) \\
+    \mu_t &= \rho \mu_{t-1} + \omega_t &\omega_t\sim N(0, \epsilon_\omega) \\
+    g_{y,t}(t) &= \text{TO COME (Non parametric estimation)}\\
     u (c_t) &= n_t \cdot CRRA(c_t / n_t) \\
     CRRA(c_t / n_t) &= \frac{(c_t/n_t)^{1-\rho} - 1}{1-\rho} \\
     tr_t &= \xi, &t>65
@@ -39,4 +41,6 @@ This model is to a large extend an extension of the paper \textbf{Optimal Financ
 
 Since we want to emulate the danish economy, we have made a set of choices. 1) We have removed the out-of-pocket expendature, which is present in the original model. This is due to the fact, that the danish welfare system in covers expenditures from illness, which is what the $oop$ should model. 2) We have chosen to model government transfers as a constant, since that is how ``folkepension'' (which is the retirement benefit in Denmark) works.
 
-Other simplifications and additions to the model is: 1) We have chosen to model the function $r(f_t)$ as a potentially concave function. In the original paper, they model acquiring more financial knowledge increasingly more expensive, and have a linear $r(\cdot)$ function. We have chosen to model investing in financial knowledge, $i_t$, as a binary variable, where agents incur a fixed cost when investing, and it can therefore be argued, that $r(\cdot)$ in our setup should be concave. 2) Lastly we have chosen to modify the income proces. In the original paper, some shocks were persistent throught out the life cycle of agents. This choice was made, to model how different agents experience different income paths throught their lives. We have chosen to omit this persistent shock, and only model the ideosyncratic shock $\nu_t$.
+Other simplifications and additions to the model is: We have chosen to model the function $r(f_t)$ as a potentially concave function. In the original paper, they model acquiring more financial knowledge increasingly more expensive, and have a linear $r(\cdot)$ function. We have chosen to model investing in financial knowledge, $i_t$, as a binary variable, where agents incur a fixed cost when investing, and it can therefore be argued, that $r(\cdot)$ in our setup should be concave.
+
+

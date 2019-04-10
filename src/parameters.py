@@ -27,6 +27,11 @@ parameters.a_tuning = 0.3 # From paper
 # Consumption grid
 parameters.Ca = 15
 
+# Schock grid (mu)
+parameters.mu_min = -10
+parameters.mu_max = 10
+parameters.Nmu = 25
+
 # Financial grid
 ## We let i be binary, so one can only accumulate max_age-start_age divided by the corresponding delta
 parameters.f_min = 0
