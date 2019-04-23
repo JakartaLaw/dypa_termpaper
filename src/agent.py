@@ -1,14 +1,26 @@
+from modules.consumptionpreference import create_consumption_preference_dict
+
+
 class Agent():
 
-    def __init__(self, par, state):
+    def __init__(self, par, state, education_lvl):
+
+
+        assert education_lvl in ['<HS', 'HS', 'College']
+        # create consumption preference
+        par.n = create_consumption_preference_dict(education_lvl, par.start_age, par.max_age)
+
+        #instantiation
         self.par = par
         self.state = state
+        self.e = education_lvl
 
     # Functions from the paper
 
     # Utility function, CRRA with equivalence scale adjuting
     def utility(self, c, t):
-        u = self.par.n[e,t] * ( (c/self.par.n[e,t])**(1-self.par.rho) ) /(1-self.par.rho)
+        # not conditioning on education level differences yet
+        u = self.par.n[t] * ( (c/self.par.n[t])**(1-self.par.rho_u) ) /(1-self.par.rho_u)
         return u
 
     # Evolution of knowledge

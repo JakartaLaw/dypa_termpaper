@@ -7,4 +7,16 @@ from modules.utils import Struct
 state = Struct()
 
 def test_can_call_agent():
-    Agent(par=par, state=state)
+    Agent(par=par, state=state, education_lvl='HS')
+
+# ma an instantiated agent
+def test_utility_func1(ma):
+    ma.utility(c=10000, t=50)
+
+@pytest.mark.skip
+def test_should_fail():
+    assert 'foo' == 'bar'
+
+def test_par_n(ma):
+    # should check if i initalize with correct education_lvl
+    assert max(ma.par.n.keys()) == ma.par.max_age
