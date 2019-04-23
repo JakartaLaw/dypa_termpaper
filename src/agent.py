@@ -1,8 +1,16 @@
+from modules.consumptionpreference import create_consumption_preference_dict
+
+
 class Agent():
 
     def __init__(self, par, state, education_lvl):
 
+
         assert education_lvl in ['<HS', 'HS', 'College']
+        # create consumption preference
+        par.n = create_consumption_preference_dict(education_lvl, par.start_age, par.max_age)
+
+        #instantiation
         self.par = par
         self.state = state
         self.e = education_lvl

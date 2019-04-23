@@ -19,7 +19,7 @@ parameters.retire_age = 65
 parameters.max_age = 90
 
 #utility function parameters
-parameters.n = [1 for x in range(91)]
+# is initialized within agent
 
 # Asset grid
 parameters.a_min = 0

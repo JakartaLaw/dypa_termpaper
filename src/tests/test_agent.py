@@ -16,3 +16,7 @@ def test_utility_func1(ma):
 @pytest.mark.skip
 def test_should_fail():
     assert 'foo' == 'bar'
+
+def test_par_n(ma):
+    # should check if i initalize with correct education_lvl
+    assert max(ma.par.n.keys()) == ma.par.max_age
