@@ -13,7 +13,6 @@ class Model(Agent):
     def __init__(self, par, state):
         super().__init__(par=par, state=state)
 
-
     def create_a_grid(self):
         # Grid assets
         grid_a_temp = np.linspace(self.par.a_min, self.par.a_max**self.par.a_tuning, self.par.Na)
@@ -49,11 +48,14 @@ class Model(Agent):
         sol.a = dict()
         sol.c = dict()
         sol.i = dict()
+        sol.v = dict()
 
         # 2. last period (= consume all)
 
         sol.m[par.T] = np.linspace(0, par.a_max, par.Na)
         sol.c[par.T] = np.linspace(0, par.a_max, par.Na)
+
+        sol.v[par.T] = self.utility(sol.c[par.T], par.T)
 
         # 2 Before last Period
         for t in reversed(range(1,par.T)): # Start in period T-1
