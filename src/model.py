@@ -6,7 +6,6 @@ from scipy import interpolate
 from agent import Agent
 from parameters import parameters as par
 from modules.utils import hermgauss_lognorm
-from modules.agepolynomial import create_age_poly_dict
 
 class Model(Agent):
 

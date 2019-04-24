@@ -2,7 +2,7 @@ import numpy as np
 from sklearn.linear_model import LinearRegression
 from sklearn.preprocessing import PolynomialFeatures
 
-def create_age_poly_dict():
+def create_age_poly_dict(education_lvl):
     '''Returns a dictionary for the 3 education groups with income profiles (in $1,000) for ages between
     25 and 65, where the first element of the list corresponds to the income at age 25. This data is
     based on the graph on p. 438'''
@@ -32,4 +32,5 @@ def create_age_poly_dict():
             age_t_poly = poly.fit_transform(age_t)
             pred_t = float(lm.predict(age_t_poly))
             pred_income[names[i]].append(pred_t)
-    return(pred_income)
+
+    return pred_income[education_lvl]

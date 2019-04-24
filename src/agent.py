@@ -1,4 +1,8 @@
+import numpy as np
+
 from modules.consumptionpreference import create_consumption_preference_dict
+from modules.agepolynomial import create_age_poly_dict
+
 
 
 class Agent():
@@ -9,13 +13,13 @@ class Agent():
         assert education_lvl in ['<HS', 'HS', 'College']
         # create consumption preference
         par.n = create_consumption_preference_dict(education_lvl, par.start_age, par.max_age)
+        par.g = create_age_poly_dict(education_lvl)
 
         #instantiation
         self.par = par
         self.state = state
         self.e = education_lvl
 
-    # Functions from the paper
 
     # Utility function, CRRA with equivalence scale adjuting
     def utility(self, c, t):
@@ -23,37 +27,51 @@ class Agent():
         u = self.par.n[t] * ( (c/self.par.n[t])**(1-self.par.rho_u) ) /(1-self.par.rho_u)
         return u
 
-    # Evolution of knowledge
-    def f_next(self, f, i):
-        f_next = (1-self.par.delta) * f + i
-        return f_next
+    # Updating state variables
+    def update_f(self, i):
+        self.state.f = (1-self.par.delta) * self.state.f + i
+
+    def update_m(self, kappa):
+        self.state.m = R_tilde(kappa) * self.a() + self.Y_next() + self.tr()
+
+    def update_mu(self):
+        self.state.mu = self.par.rho * self.state.mu + self.par.sigma_psi * np.random.normal()
+
+    def a(self, c, i, kappa):
+        return self.state.m + c + self.pi(i) - self.kappa_cost(kappa)
+
+    def Y_next(self, t):
+
+        if t<65:
+            return self.state.mu + self.par.g[t + 1] + self.par.sigma_xi * np.random.normal()
+        else:
+            return 0
 
     # Evolution of asset
     ## Remember to add stochastic element to the return factor evolution, p. 446
-    def a_next(self, f, a, y, oop, i, kappa):
-        R_tilde = self.par.r_bar + self.r(f) + 1 # Excess return factor.
-        R_tilde_next = (1-kappa) * self.par.R_bar + kappa * R_tilde
-        costs_i = self.pi_cost(i)
+    def R_tilde(self, kappa):
+        return (1-kappa)*R_riskfree() + kappa*R_riskful()
 
-        return R_tilde_next * (a + y - oop - costs_i)
+    def R_riskful(self):
+        return self.par.r_min + self.r() + self.par.sigma_eps * np.random.normal()
 
-    # Cash-on-hand
-    def cash_on_hand(self, a, y, oop):
-        return a + y - oop
+    def R_riskfree(self):
+        # Might be changed don't know if r_min is correct
+        return self.par.r_min
 
     # Government transfer
     def tr(self, x):
         return max(self.par.cmin - x, 0)
 
     # Return function of financial literacy assumed linear (p. 450)
-    def r(self, f):
+    def r(self):
         # Calculate slope
         slope = (self.par.r_max - self.par.r_min)/(self.par.f_max - self.par.f_min)
-        return self.par.r_min + slope * f
+        return self.par.r_min + slope * self.state.f
 
     # Cost function for financial knowledge (p. 451, bottom). Combining both fixed and variable
     @staticmethod
-    def pi_cost(i):
+    def pi(i):
         # constants are derived from the paper
         return 50*(i**1.75)
 
