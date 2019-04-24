@@ -1,0 +1,131 @@
+%% LyX 2.2.3 created this file.  For more info, see http://www.lyx.org/.
+%% Do not edit unless you really know what you are doing.
+\RequirePackage{fixltx2e}
+\documentclass[american]{article}
+\usepackage[T1]{fontenc}
+\usepackage[latin9]{inputenc}
+\usepackage{geometry}
+\geometry{verbose,lmargin=3cm,rmargin=3cm}
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{setspace}
+\onehalfspacing
+
+\makeatletter
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Textclass specific LaTeX commands.
+\numberwithin{figure}{section}
+\numberwithin{table}{section}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% User specified LaTeX commands.
+
+    \usepackage{fancyhdr}
+    \pagestyle{fancy}
+    \lhead{}
+\chead{}
+    \rhead{}
+    \fancypagestyle{plain}
+
+\usepackage{setspace}
+\setlength\parindent{0pt}
+
+\usepackage{titlesec}
+\usepackage[normalem]{ulem}
+\usepackage{etoolbox,siunitx,booktabs,threeparttable,multirow,array,graphicx}
+\usepackage{natbib}
+\usepackage{url}
+\usepackage{hyperref}
+
+\usepackage{algorithm}
+\usepackage{algorithmic}
+
+\makeatother
+
+\usepackage{babel}
+\begin{document}
+
+\section{Model reformulated in Buffer Stock notation}
+
+In order to keep track of the permanent and transitory shocks, we
+reformulate the model in Buffer Stock notation. 
+\[
+V_{t}(s_{t})=\underset{c_{t},i_{t},\kappa_{t}}{\max}n_{e,t}u(c_{t}/n_{e,t})+\beta\rho_{e,t}E_{t}[V_{t+1}(s_{t+1})]
+\]
+such that
+\begin{alignat*}{1}
+a_{t} & =m_{t}+tr_{t}-c_{t}-\pi(i_{t})-c_{d}I(\kappa_{t}>0)\\
+m_{t+1} & =\tilde{R}_{\kappa}(f_{t+1})a_{t}+Y_{t+1}\\
+Y_{t+1} & =\xi_{t+1}p_{y,t+1}+g_{y,e}(t+1)\\
+ & p_{y,t+1}=Gp_{y,t}\psi_{t+1}\\
+ & f_{t+1}=(1-\delta)f_{t}+i_{t}\\
+ & \tilde{R}_{\kappa}(f_{t+1})=(1-\kappa_{t})\bar{R}+\kappa_{t}\tilde{R}(f_{t+1})\\
+ & \log\tilde{R}(f_{t+1})=\bar{r}+r(f_{t})+\epsilon_{t}\\
+ & tr_{t}=\max(c_{\min}-m_{t},0)
+\end{alignat*}
+
+where $\psi_{t}$, $\xi_{t}$ are log-normally distributed and $\epsilon_{t}$
+normally distributed. The state space $s_{t}$ is given by $s_{t}=(m_{t},p_{t},f_{t},e)$.
+We discretize the choice space with $\kappa_{t}\in\{0,0.55\}$, $i_{t}\in\{0,1\}$,
+$c_{t}\in\mathbb{R}^{+}$, and we change the dynamics of the model
+such that investing in financial knowledge $i_{t}$ affects the next
+period's expected assets (and not period $t+2$). The growth rate
+$G$ should also vary with time, which should be looked in to. Modelling-wise,
+it is also only feasible to invest in the technology $i_{t}$ if $c_{\min}<m_{t}-c_{d}$,
+i.e. the government won't pay for investing in the technology.
+
+\subsection{Choice-specific value functions}
+
+\subsubsection{Case $\kappa_{t}=0.55$ and $i_{t}=1$}
+
+In this case, we have 
+\[
+\tilde{R}_{\kappa}(f_{t+1})=(1-0.55)\bar{R}+0.55\times\exp(\bar{r}+r(f_{t})+\sigma_{\epsilon}\epsilon_{t})
+\]
+and thus 
+\[
+m_{t+1}=\tilde{R}_{\kappa}(f_{t+1})\left[m_{t}-c_{t}-\pi(1)-c_{d}\right]+Y_{t+1}+tr_{t+1}
+\]
+
+where all stochastic elements can be integreated out via Gauss-Hermite
+integration. Thus, given an education level $e$, for each point in
+the state space $(m_{t},p_{t},f_{t})$ we evaluate $4$ discrete choices
+and optimize consumption given these choices. Then, we save this solution
+$(c_{t}^{*},i_{t}^{*},\kappa_{t}^{*})$.
+
+\subsection{Evaluating $E_{t}[V_{t+1}(m_{t+1},p_{t+1},f_{t+1})]$}
+
+We are interested in evaluating 
+\[
+E_{t}[V_{t+1}(m_{t+1},p_{t+1},f_{t+1})]=\int_{\psi_{t}}\int_{\xi_{t}}\int_{\epsilon_{t}}V_{t+1}(m_{t+1},p_{t+1},f_{t+1})d\epsilon_{t}d\xi_{t}d\psi_{t}
+\]
+which can be done via Gauss-Hermite integration as all shocks are
+log-normally distributed. We draw $8$ nodes for each of the three
+stochastic elements $\{\psi_{j},\xi_{j},\epsilon_{j}\}_{j=1}^{8}$,
+and we then calculate the expectation of the value function given
+a realization of the state space $s_{t+1}=(m_{t+1},p_{t+1},f_{t+1})$
+and a choice $(c_{t},\kappa_{t},i_{t})$:
+\begin{multline*}
+E_{t}[V_{t+1}(s_{t+1})]=E_{t}[\tilde{R}_{\kappa}(f_{t+1})a_{t}+Y_{t+1}+tr_{t+1}]=E_{t}\left[\tilde{R}_{\kappa}(f_{t+1})a_{t}+\left(\xi_{t+1}\left[Gp_{y,t}\psi_{t+1}\right]+g_{y,e}(t+1)\right)+tr_{t+1}\right]=\\
+E_{t}\left[\left\{ (1-\kappa_{t})\bar{R}+\kappa_{t}\tilde{R}((1-\delta)f_{t}+i_{t})\right\} a_{t}+\left(\xi_{t+1}\left[Gp_{y,t}\psi_{t+1}\right]+g_{y,e}(t+1)\right)+tr_{t+1}\right]=\\
+E_{t}\left[\left\{ (1-\kappa_{t})\bar{R}+\kappa_{t}\left[\bar{r}+r\left((1-\delta)f_{t}+i_{t}\right)+\epsilon_{t}\right]\right\} a_{t}+\left(\xi_{t+1}\left[Gp_{y,t}\psi_{t+1}\right]+g_{y,e}(t+1)\right)+tr_{t+1}\right]
+\end{multline*}
+
+which we can approximate by
+\begin{gather*}
+\sum_{j=1}^{8}w_{j}^{\psi}\sum_{i=1}^{8}w_{i}^{\xi}\sum_{k=1}^{8}w_{k}^{\epsilon}\\
+\left(\left\{ (1-\kappa_{t})\bar{R}+\kappa_{t}\left[\bar{r}+r\left((1-\delta)f_{t}+i_{t}\right)+\epsilon_{t+1}^{(k)}\right]\right\} \left[m_{t}+tr_{t}-c_{t}-\pi(i_{t})-c_{d}I(\kappa_{t}>0)\right]+\left(\xi_{t+1}^{(i)}\left[Gp_{y,t}\psi_{t+1}^{(j)}\right]+g_{y,e}(t+1)\right)\right)
+\end{gather*}
+
+\subsection{Notes}
+\begin{itemize}
+\item One interesting reformulation to the Danish context would be to make
+pension tranfers fixed after age $65$ as a function of the wealth
+at retirement.
+\item In their formulation, $\tilde{R}$ is only log-normally distributed
+meaning that we cannot obtain negative returns on our risky investments.
+Perhaps that's why the model predicts high participation, whereas
+this is not the case in real life?
+\end{itemize}
+
+\end{document}
