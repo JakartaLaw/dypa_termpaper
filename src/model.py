@@ -12,7 +12,7 @@ class Model(Agent):
     def __init__(self, par, state, education_lvl):
         super().__init__(par=par, state=state, education_lvl=education_lvl)
 
-    def create_a_grid(self):
+    def create_m_grid(self):
         # Grid assets
         grid_a_temp = np.linspace(self.par.a_min, self.par.a_max**self.par.a_tuning, self.par.Na)
         grid_a = grid_a_temp ** (1/self.par.a_tuning)
@@ -21,7 +21,7 @@ class Model(Agent):
         # Grid financial knowledge
         grid_f = np.linspace(self.par.f_min, self.par.f_max, self.par.Nf)
 
-    def create_c_grid(self):
+    def create_p_grid(self):
         pass
 
     def create_mu_grid(self):
@@ -36,6 +36,10 @@ class Model(Agent):
     def create_interp(x_vals, y_vals):
         """Returns function which interpolates"""
         return interpolate.interp1d(x_vals, y_vals, kind='linear', fill_value = "extrapolate")
+
+    def create_grids():
+        pass
+
 
     def solve(self, par):
         # note: possibly use numpy 2d array for solving this with numba integration
