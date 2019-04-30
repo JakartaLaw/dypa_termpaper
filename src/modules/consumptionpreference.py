@@ -43,7 +43,7 @@ def create_consumption_preference_dict(e_lvl, start_age, end_age):
 
 
     age = [25,30,35,40,45,50,55,60,65, 90]
-    col = [0.3, 1.56, 1.65, 1.68, 1.68, 1.60, 1.25, 0.5, 0.0, 0.0]
+    col = [0.3, 1.56, 1.65, 1.68, 1.68, 1.60, 1.25, 0.8, 0.5, 0.5]
     hs = [val * 1.07 for val in col]
     lhs = [val * 1.15 for val in col]
 
