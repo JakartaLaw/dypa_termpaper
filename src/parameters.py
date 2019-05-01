@@ -1,6 +1,6 @@
 # Singleton Pattern
 import numpy as np
-from modules.utils import Struct, hermgauss_lognorm
+from modules.utils import Struct, hermgauss_lognorm, create_mortality
 
 parameters = Struct()
 
@@ -17,7 +17,9 @@ parameters.c_d = 4 #value not from paper, Fixed cost of investing in financial k
 parameters.start_age = 25
 parameters.retire_age = 65
 parameters.max_age = 90
-parameters.mortality = np.array([0.03 for i in range(parameters.max_age + 1)])
+#parameters.mortality = np.array([0.03 for i in range(parameters.max_age + 1)])
+parameters.mortality = create_mortality()
+
 
 #utility function parameters
 # is initialized within agent
