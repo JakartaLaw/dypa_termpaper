@@ -13,7 +13,7 @@ class Agent():
         assert education_lvl in ['<HS', 'HS', 'College']
         # create consumption preference
         par.n = create_consumption_preference_dict(education_lvl, par.start_age, par.max_age)
-        par.g = create_age_poly_dict(education_lvl)
+        par.age_poly = create_age_poly_dict(education_lvl)
 
         #instantiation
         self.par = par
@@ -37,8 +37,8 @@ class Agent():
     def update_mu(self):
         self.state.mu = self.par.rho * self.state.mu + self.par.sigma_psi * np.random.normal()
 
-    def a(self, c, i, kappa):
-        return self.state.m + c + self.pi(i) - self.kappa_cost(kappa)
+    def a(self, c, i, kappa, t):
+        return self.state.m - c - self.pi(i) - self.kappa_cost(kappa) + self.par.tr[t]
 
     def Y_next(self, t):
 
@@ -49,11 +49,11 @@ class Agent():
 
     # Evolution of asset
     ## Remember to add stochastic element to the return factor evolution, p. 446
-    def R_tilde(self, kappa):
-        return (1-kappa)*R_riskfree() + kappa*R_riskful()
+    def R_tilde(self, kappa, shock):
+        return (1-kappa)*self.R_riskfree() + kappa*self.R_riskful(shock)
 
-    def R_riskful(self):
-        return self.par.r_min + self.r() + self.par.sigma_eps * np.random.normal()
+    def R_riskful(self, shock):
+        return self.par.r_min + self.r() + shock
 
     def R_riskfree(self):
         # Might be changed don't know if r_min is correct

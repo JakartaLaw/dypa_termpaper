@@ -1,6 +1,6 @@
 # Singleton Pattern
 import numpy as np
-from modules.utils import Struct
+from modules.utils import Struct, hermgauss_lognorm
 
 parameters = Struct()
 
@@ -43,5 +43,28 @@ parameters.f_max = parameters.max_age - parameters.start_age
 parameters.Nf = 25 # From paper
 
 # Gauss Hermite
+
+# Number of nodes
+parameters.Npsi = 8
+parameters.Nxi = 8
+parameters.Neps = 8
+
+# Weights and nodes
+parameters.psi_sigma = 0.1
+parameters.xi_sigma = 0.1
+parameters.eps_sigma = 0.1
+
+parameters.eps, parameters.eps_w = hermgauss_lognorm(parameters.Neps, parameters.eps_sigma)
+parameters.xi, parameters.xi_w = hermgauss_lognorm(parameters.Nxi, parameters.xi_sigma)
+parameters.psi, parameters.psi_w = hermgauss_lognorm(parameters.Npsi, parameters.psi_sigma)
+
 parameters.Nnu_y = 8
 parameters.sigma_nu_y = 1 # Set arbitrary for now
+parameters.r_max = 0.08
+parameters.r_min = 0.00
+parameters.R_bar = 1.02
+parameters.G = 1.03
+
+parameters.M_max = 100000
+parameters.NM = 100 
+parameters.grid_M = np.linspace(0, parameters.M_max, parameters.NM)

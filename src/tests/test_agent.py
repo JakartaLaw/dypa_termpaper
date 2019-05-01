@@ -1,4 +1,5 @@
 import pytest
+import numpy as np
 
 from agent import Agent
 from parameters import parameters as par
@@ -11,7 +12,14 @@ def test_can_call_agent():
 
 # ma an instantiated agent
 def test_utility_func1(ma):
-    ma.utility(c=10000, t=50)
+    u = ma.utility(c=10000, t=50)
+    assert u != np.nan
+
+def test_utility_func1(ma):
+    print(ma.par.n[90])
+    u = ma.utility(c=10000, t=90)
+    print(u)
+    assert u != np.nan
 
 @pytest.mark.skip
 def test_should_fail():
