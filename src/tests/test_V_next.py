@@ -2,7 +2,7 @@ import pytest
 import os
 os.getcwd()
 
-from src.scripts.vfi_script import find_V_bruteforce
+from scripts.vfi_script import find_V_bruteforce
 
 f = 5.5
 m = 1000
