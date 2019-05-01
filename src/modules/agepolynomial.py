@@ -33,4 +33,5 @@ def create_age_poly_dict(education_lvl):
             pred_t = float(lm.predict(age_t_poly))
             pred_income[names[i]].append(pred_t)
 
-    return pred_income[education_lvl]
+    # Return age polynomials with zeros for age 0-24 and 66-90
+    return np.append(np.zeros(25), np.append(pred_income[education_lvl], np.zeros(25)))
