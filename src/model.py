@@ -1,21 +1,23 @@
 # Libraries
 import numpy as np
 from scipy import interpolate
+from scipy.optimize import minimize_scalar
 
 # Own modules
 from agent import Agent
 from parameters import parameters as par
 from modules.utils import hermgauss_lognorm
 
+
 class Model(Agent):
 
     def __init__(self, par, state, education_lvl):
         super().__init__(par=par, state=state, education_lvl=education_lvl)
 
-    def create_a_grid(self):
+    def create_m_grid(self):
         # Grid assets
-        grid_a_temp = np.linspace(self.par.a_min, self.par.a_max**self.par.a_tuning, self.par.Na)
-        grid_a = grid_a_temp ** (1/self.par.a_tuning)
+        grid_m_temp = np.linspace(self.par.m_min, self.par.m_max**self.par.m_tuning, self.par.Nm)
+        grid_m = grid_m_temp ** (1/self.par.m_tuning)
 
     def create_f_grid(self):
         # Grid financial knowledge
@@ -24,8 +26,8 @@ class Model(Agent):
     def create_c_grid(self):
         pass
 
-    def create_mu_grid(self):
-        grid_mu = np.linspace(self.par.mu_min, self.par.mu_max, self.par.Nmu)
+    def create_p_grid(self):
+        grid_mu = np.linspace(self.par.p_min, self.par.p_max, self.par.Np)
 
     @staticmethod
     def create_gauss_hermite():
@@ -50,7 +52,6 @@ class Model(Agent):
                     r = self.r() # Calculate return today
 
                     #interest factor
-
                     interest_factor = self.R_tilde(choice.kappa, shock=self.par.eps[k_eps])
                     assets = self.a(c, choice.i, choice.kappa, t)
 
@@ -64,16 +65,27 @@ class Model(Agent):
 
         return(V_fut)
 
-    def find_V(choice, t):
+    def find_V(self, choice, t):
+        '''Find optimal c for all states for given choices (i,kappa) in period t'''
 
-        for state in self.statespace:
+        if t == self.par.max_age:
+            Vfunc = lambda c: self.utility(c, t)
+        else:
+            Vfunc = lambda c: self.utility(c, t) + self.par.beta * self.par.mortality[t] * self.V_integrate(c, choice, t)
 
-            self.state = state
+        # Optimizer
+        # Convert function to negative for minimization
+        Vfunc_neg = lambda x: -Vfunc(x)
 
-            if self.state.t == self.par.max_age:
-                Vfunc = self.utility
-            else:
-                Vfunc = lambda c: choice.self.utility(c, t) + self.par.beta * self.par.mortality[t] * V_integrate(c, choice, t)
+        # c) Find optimum
+        res = minimize_scalar(Vfunc_neg, tol = self.par.tolerance
+                              , bounds = [1,self.state.m], method = "bounded")
+
+        Vstar, Cstar = float(-res.fun), float(res.x)
+
+        return Vstar, Cstar
+
+
 
     def create_V_interp(self, Vstar, t):
         self.V_plus_interp = self.create_interp(self.par.grid_M, Vstar[t+1])

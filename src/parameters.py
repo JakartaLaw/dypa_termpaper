@@ -4,6 +4,7 @@ from modules.utils import Struct, hermgauss_lognorm
 
 parameters = Struct()
 
+parameters.beta = 0.98
 parameters.delta = 0.04 # value not from paper (depreciation on financial knowledge)
 parameters.c_min = 0 #value not from paper (max cash_on_hand for government transfer)
 parameters.sigma_y_eps = 1 #value not from paper
@@ -16,24 +17,24 @@ parameters.c_d = 4 #value not from paper, Fixed cost of investing in financial k
 parameters.start_age = 25
 parameters.retire_age = 65
 parameters.max_age = 90
-parameters.mortatility = np.array([0.03 for i in range(parameters.max_age + 1)])
+parameters.mortality = np.array([0.03 for i in range(parameters.max_age + 1)])
 
 #utility function parameters
 # is initialized within agent
 
 # Asset grid
-parameters.a_min = 0
-parameters.a_max = 500000 # Arbitrary set by Ditlev
-parameters.Na = 40 # From paper
-parameters.a_tuning = 0.3 # From paper
+parameters.m_min = 0
+parameters.m_max = 500000 # Arbitrary set by Ditlev
+parameters.Nm = 40 # From paper
+parameters.m_tuning = 0.3 # From paper
 
 # Consumption grid
 parameters.Ca = 15
 
-# Schock grid (mu)
-parameters.mu_min = -10
-parameters.mu_max = 10
-parameters.Nmu = 25
+# Schock grid (permanent income p)
+parameters.p_min = -10
+parameters.p_max = 10
+parameters.Np = 25
 
 parameters.rho_u = 0.96
 # Financial grid
@@ -68,3 +69,5 @@ parameters.G = 1.03
 parameters.M_max = 100000
 parameters.NM = 100
 parameters.grid_M = np.linspace(0, parameters.M_max, parameters.NM)
+
+parameters.tolerance = 10**(-6)
