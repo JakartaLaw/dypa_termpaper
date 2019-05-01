@@ -87,11 +87,8 @@ class Model(Agent):
                     try:
                         income = par.xi[i_xi] * (par.G * self.state.p *  par.psi[j_psi] + self.par.age_poly[t+1] +  self.par.age_poly[t])
                     except:
-                        try:
-                            self.par.age_poly(t+1)
-                        except:
-                            print('t is (inner)', t, len(self.par.age_poly))
-                        raise Exception('t is', t)
+                        raise Exception(t + 1, len(self.par.age_poly))
+
 
                     integrand = interest_factor * assets + income
 
@@ -106,7 +103,7 @@ class Model(Agent):
     def find_V(self, choice, t):
         '''Find optimal c for all states for given choices (i,kappa) in period t'''
 
-        if t == self.par.max_age:
+        if t == self.par.max_age - 1:
             Vfunc = lambda c: self.utility(c, t)
         else:
             Vfunc = lambda c: self.utility(c, t) + self.par.beta * self.par.mortality[t] * self.V_integrate(c, choice, t)
