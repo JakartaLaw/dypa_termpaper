@@ -9,3 +9,55 @@ To solve this model we need to solve the following problem: find the function $\
 In other words, for a given state space which action set/choice set should the agent take, if the agent wishes to maximize its cummulative utility during its lifecycle.
 
 The bellman equation, is what allows to only consider two consequtive periods: $(t, t+1)$. We can solve the model, by backwards induction. Solve the model in period $T$, where the model terminates.
+
+\subsubsection{Case $\kappa_{t}=0.55$ and $i_{t}=1$}
+
+In this case, we have
+\[
+\tilde{R}_{\kappa}(f_{t+1})=(1-0.55)\bar{R}+0.55\times\exp(\bar{r}+r(f_{t})+\sigma_{\epsilon}\epsilon_{t})
+\]
+and thus
+\[
+m_{t+1}=\tilde{R}_{\kappa}(f_{t+1})\left[m_{t}-c_{t}-\pi(1)-c_{d}\right]+Y_{t+1}+tr_{t+1}
+\]
+
+where all stochastic elements can be integreated out via Gauss-Hermite
+integration. Thus, given an education level $e$, for each point in
+the state space $(m_{t},p_{t},f_{t})$ we evaluate $4$ discrete choices
+and optimize consumption given these choices. Then, we save this solution
+$(c_{t}^{*},i_{t}^{*},\kappa_{t}^{*})$.
+
+\subsection{Evaluating $E_{t}[V_{t+1}(m_{t+1},p_{t+1},f_{t+1})]$}
+
+We are interested in evaluating
+\[
+E_{t}[V_{t+1}(m_{t+1},p_{t+1},f_{t+1})]=\int_{\psi_{t}}\int_{\xi_{t}}\int_{\epsilon_{t}}V_{t+1}(m_{t+1},p_{t+1},f_{t+1})d\epsilon_{t}d\xi_{t}d\psi_{t}
+\]
+which can be done via Gauss-Hermite integration as all shocks are
+log-normally distributed. We draw $8$ nodes for each of the three
+stochastic elements $\{\psi_{j},\xi_{j},\epsilon_{j}\}_{j=1}^{8}$,
+and we then calculate the expectation of the value function given
+a realization of the state space $s_{t+1}=(m_{t+1},p_{t+1},f_{t+1})$
+and a choice $(c_{t},\kappa_{t},i_{t})$:
+\begin{gather*}
+E_{t}[V_{t+1}(s_{t+1})]=E_{t}[\tilde{R}_{\kappa}(f_{t+1})a_{t}+Y_{t+1}+tr_{t+1}] =\\E_{t}\left[\tilde{R}_{\kappa}(f_{t+1})a_{t}+\left(\xi_{t+1}\left[Gp_{y,t}\psi_{t+1}\right]+g_{y,e}(t+1)\right)+tr_{t+1}\right]=\\
+E_{t}\left[\left\{ (1-\kappa_{t})\bar{R}+\kappa_{t}\tilde{R}((1-\delta)f_{t}+i_{t})\right\} a_{t}+\left(\xi_{t+1}\left[Gp_{y,t}\psi_{t+1}\right]+g_{y,e}(t+1)\right)+tr_{t+1}\right]=\\
+E_{t}\left[\left\{ (1-\kappa_{t})\bar{R}+\kappa_{t}\left[\bar{r}+r\left((1-\delta)f_{t}+i_{t}\right)+\epsilon_{t}\right]\right\} a_{t} + \left(\xi_{t+1}\left[Gp_{y,t}\psi_{t+1}\right]+g_{y,e}(t+1)\right)+tr_{t+1}\right]
+\end{gather*}
+
+which we can approximate by
+\begin{gather*}
+\sum_{j=1}^{8}w_{j}^{\psi}\sum_{i=1}^{8}w_{i}^{\xi}\sum_{k=1}^{8}w_{k}^{\epsilon} \\
+\left\{ (1-\kappa_{t})\bar{R}+\kappa_{t}\left[\bar{r}+r\left((1-\delta)f_{t}+i_{t}\right)+\epsilon_{t+1}^{(k)}\right]\right\} \times \\ \left[m_{t}+tr_{t}-c_{t}-\pi(i_{t})-c_{d}I(\kappa_{t}>0)\right]+\left(\xi_{t+1}^{(i)}\left[Gp_{y,t}\psi_{t+1}^{(j)}\right]+g_{y,e}(t+1)\right)
+\end{gather*}
+
+\subsection{Notes}
+\begin{itemize}
+\item One interesting reformulation to the Danish context would be to make
+pension tranfers fixed after age $65$ as a function of the wealth
+at retirement.
+\item In their formulation, $\tilde{R}$ is only log-normally distributed
+meaning that we cannot obtain negative returns on our risky investments.
+Perhaps that's why the model predicts high participation, whereas
+this is not the case in real life?
+\end{itemize}

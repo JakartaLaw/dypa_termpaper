@@ -5,7 +5,6 @@ from modules.utils import Struct, hermgauss_lognorm
 parameters = Struct()
 
 parameters.delta = 0.04 # value not from paper (depreciation on financial knowledge)
-parameters.mortatility = 0.03 # value not from paper ('p' in paper)
 parameters.c_min = 0 #value not from paper (max cash_on_hand for government transfer)
 parameters.sigma_y_eps = 1 #value not from paper
 parameters.sigma_y_v = 1 #value not from paper
@@ -17,6 +16,7 @@ parameters.c_d = 4 #value not from paper, Fixed cost of investing in financial k
 parameters.start_age = 25
 parameters.retire_age = 65
 parameters.max_age = 90
+parameters.mortatility = np.array([0.03 for i in range(parameters.max_age + 1)])
 
 #utility function parameters
 # is initialized within agent
@@ -66,5 +66,5 @@ parameters.R_bar = 1.02
 parameters.G = 1.03
 
 parameters.M_max = 100000
-parameters.NM = 100 
+parameters.NM = 100
 parameters.grid_M = np.linspace(0, parameters.M_max, parameters.NM)

@@ -26,4 +26,4 @@ def test_can_call_v_integrate():
     Vstar[t+1] = Vstar[90]
     m.create_V_interp(Vstar, t=t)
     res = m.V_integrate(c=100, choice=choice, t=t)
-    print(res)
+    assert res == pytest.approx(11.7, abs=0.1)
