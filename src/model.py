@@ -2,32 +2,58 @@
 import numpy as np
 from scipy import interpolate
 from scipy.optimize import minimize_scalar
+from collections import namedtuple
 
 # Own modules
 from agent import Agent
 from parameters import parameters as par
 from modules.utils import hermgauss_lognorm
 
+StateTuple = namedtuple('statetuple', ['m', 'f', 'p'])
+ChoiceTuple = namedtuple('choicetuple', ['kappa', 'i'])
+
+StatePolicyTuple = namedtuple('statepolicytuple', ['m', 'f', 'p', 't'])
+ChoicePolicyTuple = namedtuple('choicepolicytuple', ['kappa', 'i', 'c'])
 
 class Model(Agent):
 
     def __init__(self, par, state, education_lvl):
         super().__init__(par=par, state=state, education_lvl=education_lvl)
+        self.statespace = list()
+        self.choicespace = list()
+        self.policy = dict()
 
     def create_m_grid(self):
         # Grid assets
         grid_m_temp = np.linspace(self.par.m_min, self.par.m_max**self.par.m_tuning, self.par.Nm)
         grid_m = grid_m_temp ** (1/self.par.m_tuning)
+        return grid_m
 
     def create_f_grid(self):
         # Grid financial knowledge
         grid_f = np.linspace(self.par.f_min, self.par.f_max, self.par.Nf)
-
-    def create_c_grid(self):
-        pass
+        return grid_f
 
     def create_p_grid(self):
-        grid_mu = np.linspace(self.par.p_min, self.par.p_max, self.par.Np)
+        grid_p = np.linspace(self.par.p_min, self.par.p_max, self.par.Np)
+        return grid_p
+
+    def create_statespace(self):
+        '''grid over m, f, p'''
+        m_grid = self.create_m_grid()
+        f_grid = self.create_f_grid()
+        p_grid = self.create_p_grid()
+
+        for m in m_grid:
+            for f in f_grid:
+                for p in p_grid:
+                    self.statespace.append(StateTuple(m, f, p))
+
+    def create_choicespace(self):
+        '''grid over i, kappa'''
+        for i in [0, 1]:
+            for kappa in [0, 55]:
+                self.choicespace.append(ChoiceTuple(kappa = kappa, i = i))
 
     @staticmethod
     def create_gauss_hermite():
@@ -85,6 +111,21 @@ class Model(Agent):
 
         return Vstar, Cstar
 
+    def find_V_for_choices(t):
+        '''Find optimal V for all i, k in period t'''
+
+        #initialize V and C
+        Vstar, Cstar = - np.inf, None
+
+        for choice in self.choicespace:
+            V, C = self.find_V(choice, t)
+            if V > Vstar:
+                _c = choice
+                Cstar = Cstar
+
+        spt = StatePolicyTuple(m = self.state.m, f = self.state.f, p = self.state.p, t=t)
+        cpt = ChoicePolicyTuple(kappa = _c.kappa, i = _c.i, c = Cstar)
+        self.policy[spt] = cpt
 
 
     def create_V_interp(self, Vstar, t):
@@ -107,7 +148,8 @@ class Model(Agent):
         # 1) (V_star_interpolant) interpolant over næste periode mellem m_grid og v_star_t+1
         for t in reversed(range(par.start_age, par.max_age)):
             self.create_V_interp(Vstar)
-
-            find_V()
+            for s in statespace:
+                self.state = s
+                self.find_V_for_choices(t)
 
         # 2) optimér mht c
