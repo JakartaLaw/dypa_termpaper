@@ -111,7 +111,7 @@ class Model(Agent):
 
         return Vstar, Cstar
 
-    def find_V_for_choices(t):
+    def find_V_for_choices(self, t):
         '''Find optimal V for all i, k in period t'''
 
         #initialize V and C
@@ -138,8 +138,9 @@ class Model(Agent):
 
     def solve(self):
         # create state_space grid
-
+        self.create_statespace()
         # create choice_space grid (over i og kappa)
+        self.create_choicespace()
 
         # V in period T
         Vstar = self.initialize_Vstar()
@@ -147,8 +148,8 @@ class Model(Agent):
 
         # 1) (V_star_interpolant) interpolant over næste periode mellem m_grid og v_star_t+1
         for t in reversed(range(par.start_age, par.max_age)):
-            self.create_V_interp(Vstar)
-            for s in statespace:
+            self.create_V_interp(Vstar,t)
+            for s in self.statespace:
                 self.state = s
                 self.find_V_for_choices(t)
 

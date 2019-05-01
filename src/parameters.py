@@ -25,7 +25,7 @@ parameters.mortality = create_mortality()
 # is initialized within agent
 
 # Asset grid
-parameters.m_min = 0
+parameters.m_min = 2
 parameters.m_max = 500000 # Arbitrary set by Ditlev
 parameters.Nm = 40 # From paper
 parameters.m_tuning = 0.3 # From paper
