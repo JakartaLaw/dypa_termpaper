@@ -7,7 +7,7 @@ from collections import namedtuple
 # Own modules
 from agent import Agent
 from parameters import parameters as par
-from modules.utils import hermgauss_lognorm
+from modules.utils import hermgauss_lognorm, Struct
 
 StateTuple = namedtuple('statetuple', ['m', 'f', 'p'])
 ChoiceTuple = namedtuple('choicetuple', ['kappa', 'i'])
@@ -47,7 +47,9 @@ class Model(Agent):
         for m in m_grid:
             for f in f_grid:
                 for p in p_grid:
-                    self.statespace.append(StateTuple(m, f, p))
+                    state = Struct()
+                    state.m, state.f, state.p = m, f, p
+                    self.statespace.append(state)
 
     def create_choicespace(self):
         '''grid over i, kappa'''
@@ -74,6 +76,7 @@ class Model(Agent):
         for j_psi in range(1, self.par.Npsi):
             for i_xi in range(1, self.par.Nxi):
                 for k_eps in range(1, self.par.Neps):
+
                     self.update_f(choice.i) # updateting to f_t+1
                     r = self.r() # Calculate return today
 
@@ -81,13 +84,22 @@ class Model(Agent):
                     interest_factor = self.R_tilde(choice.kappa, shock=self.par.eps[k_eps])
                     assets = self.a(c, choice.i, choice.kappa, t)
 
-                    income = par.xi[i_xi] * (par.G * self.state.p *  par.psi[j_psi] + self.par.age_poly[t+1] +  self.par.age_poly[t])
+                    try:
+                        income = par.xi[i_xi] * (par.G * self.state.p *  par.psi[j_psi] + self.par.age_poly[t+1] +  self.par.age_poly[t])
+                    except:
+                        try:
+                            self.par.age_poly(t+1)
+                        except:
+                            print('t is (inner)', t, len(self.par.age_poly))
+                        raise Exception('t is', t)
 
                     integrand = interest_factor * assets + income
 
                     V = self.par.psi_w[j_psi] * self.par.xi_w[i_xi] * self.par.eps_w[k_eps] * self.V_plus_interp(integrand) # GH weighting
 
                     V_fut += V
+
+                    self.reset_f()
 
         return(V_fut)
 
