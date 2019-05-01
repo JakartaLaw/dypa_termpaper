@@ -29,6 +29,7 @@ class Agent():
 
     # Updating state variables
     def update_f(self, i):
+        self._f_old = copy(self.state.f)
         self.state.f = (1-self.par.delta) * self.state.f + i
 
     def update_m(self, kappa):
@@ -36,6 +37,9 @@ class Agent():
 
     def update_mu(self):
         self.state.mu = self.par.rho * self.state.mu + self.par.sigma_psi * np.random.normal()
+
+    def reset_f(self):
+        self.state.f = copy(self_f_old)
 
     def a(self, c, i, kappa, t):
         return self.state.m - c - self.pi(i) - self.kappa_cost(kappa) + self.par.tr[t]

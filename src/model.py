@@ -7,7 +7,7 @@ from collections import namedtuple
 # Own modules
 from agent import Agent
 from parameters import parameters as par
-from modules.utils import hermgauss_lognorm
+from modules.utils import hermgauss_lognorm, Struct
 
 StateTuple = namedtuple('statetuple', ['m', 'f', 'p'])
 ChoiceTuple = namedtuple('choicetuple', ['kappa', 'i'])
@@ -47,7 +47,9 @@ class Model(Agent):
         for m in m_grid:
             for f in f_grid:
                 for p in p_grid:
-                    self.statespace.append(StateTuple(m, f, p))
+                    state = Struct()
+                    state.m, state.f, state.p = m, f, p
+                    self.statespace.append(state)
 
     def create_choicespace(self):
         '''grid over i, kappa'''
