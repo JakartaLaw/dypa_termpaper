@@ -22,5 +22,5 @@ def test_initalize_V_star():
     model = Model(par=par, state=state, education_lvl='HS')
     Vstar = model.initialize_Vstar()
 
-    for i for i in Vstar[90]:
+    for i in Vstar[90]:
         pass
