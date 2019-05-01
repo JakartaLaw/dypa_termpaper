@@ -38,7 +38,7 @@ def calc_consumption_preference(j_et, k_et):
 
     return z(j_et,k_et) / z(2,1)
 
-def create_consumption_preference_dict(e_lvl, start_age, end_age):
+def create_consumption_preference_array(e_lvl):
 
 
 
@@ -56,4 +56,4 @@ def create_consumption_preference_dict(e_lvl, start_age, end_age):
     assert e_lvl in names.keys()
     f = interpolate.interp1d(age, names[e_lvl], kind='linear', fill_value = "extrapolate")
 
-    return {_age: float(f(_age)) for _age in range(start_age, end_age + 1)}
+    return np.array([float(f(_age)) for _age in range(0, 90 + 1)])

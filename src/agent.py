@@ -1,6 +1,7 @@
 import numpy as np
+from copy import copy
 
-from modules.consumptionpreference import create_consumption_preference_dict
+from modules.consumptionpreference import create_consumption_preference_array
 from modules.agepolynomial import create_age_poly_dict
 
 
@@ -12,7 +13,7 @@ class Agent():
 
         assert education_lvl in ['<HS', 'HS', 'College']
         # create consumption preference
-        par.n = create_consumption_preference_dict(education_lvl, par.start_age, par.max_age)
+        par.n = create_consumption_preference_array(education_lvl)
         par.age_poly = create_age_poly_dict(education_lvl)
 
         #instantiation
@@ -39,7 +40,7 @@ class Agent():
         self.state.mu = self.par.rho * self.state.mu + self.par.sigma_psi * np.random.normal()
 
     def reset_f(self):
-        self.state.f = copy(self_f_old)
+        self.state.f = copy(self._f_old)
 
     def a(self, c, i, kappa, t):
         return self.state.m - c - self.pi(i) - self.kappa_cost(kappa) + self.par.tr[t]
