@@ -1,0 +1,394 @@
+#LyX 2.2 created this file. For more info see http://www.lyx.org/
+\lyxformat 508
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass article
+\begin_preamble
+
+    \usepackage{fancyhdr}
+    \pagestyle{fancy}
+    \lhead{}
+\chead{}
+    \rhead{}
+    \fancypagestyle{plain}
+
+\usepackage{setspace}
+\setlength\parindent{0pt}
+
+\usepackage{titlesec}
+\usepackage[normalem]{ulem}
+\usepackage{etoolbox,siunitx,booktabs,threeparttable,multirow,array,graphicx}
+\usepackage{natbib}
+\usepackage{url}
+\usepackage{hyperref}
+
+\usepackage{algorithm}
+\usepackage{algorithmic}
+\end_preamble
+\use_default_options true
+\begin_modules
+customHeadersFooters
+fixltx2e
+figs-within-sections
+tabs-within-sections
+\end_modules
+\maintain_unincluded_children false
+\language american
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\spacing onehalf
+\use_hyperref false
+\papersize default
+\use_geometry true
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plain
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 1
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\leftmargin 3cm
+\rightmargin 3cm
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle fancy
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Section
+Model
+\end_layout
+
+\begin_layout Subsection
+Setup
+\end_layout
+
+\begin_layout Standard
+The original model in 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+cite{lusardi2017optimal}
+\end_layout
+
+\end_inset
+
+ is reformulated to incorporate some dynamic elements from the Buffer Stock
+ model that allows for feasible tracking of the state space.
+ Let the state space be given by 
+\begin_inset Formula 
+\[
+s_{t}=(m_{t},p_{t},f_{t},e)
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where 
+\begin_inset Formula $m_{t}$
+\end_inset
+
+ is cash-on-hand, 
+\begin_inset Formula $p_{t}$
+\end_inset
+
+ is permanent income (which in 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+cite{lusardi2017optimal}
+\end_layout
+
+\end_inset
+
+ is denoted as 
+\begin_inset Formula $\mu_{t}$
+\end_inset
+
+), 
+\begin_inset Formula $f_{t}$
+\end_inset
+
+ is financial literacy and 
+\begin_inset Formula $e$
+\end_inset
+
+ the education level.
+ Then the value function can be represented in recursive form as 
+\begin_inset Formula 
+\[
+V_{t}(s_{t})=\underset{c_{t},i_{t},\kappa_{t}}{\max}n_{e,t}u(c_{t}/n_{e,t})+\beta\rho_{e,t}E_{t}[V_{t+1}(s_{t+1})]
+\]
+
+\end_inset
+
+such that
+\begin_inset Formula 
+\begin{alignat*}{1}
+a_{t} & =m_{t}+tr_{t}-c_{t}-\pi(i_{t})-c_{d}I(\kappa_{t}>0)\\
+m_{t+1} & =\tilde{R}_{\kappa}(f_{t+1})a_{t}+Y_{t+1}\\
+Y_{t+1} & =\xi_{t+1}p_{t+1}g_{y,e}(t+1)\\
+p_{t+1} & =Gp_{t}\psi_{t+1}\\
+f_{t+1} & =(1-\delta)f_{t}+i_{t}\\
+\tilde{R}_{\kappa}(f_{t+1}) & =(1-\kappa_{t})\bar{R}+\kappa_{t}\tilde{R}(f_{t+1})\\
+\log\tilde{R}(f_{t+1}) & =\bar{r}+r(f_{t})+\tilde{\epsilon}_{t},\tilde{\epsilon}_{t}\sim N(0,\sigma_{\epsilon}^{2})\Rightarrow\\
+\tilde{R}(f_{t+1}) & =\exp\left(\bar{r}+r(f_{t})\right)\exp(\tilde{\epsilon}_{t})=\exp\left(\bar{r}+r(f_{t})\right)\epsilon_{t}\\
+tr_{t} & =\max(c_{\min}-m_{t},0)
+\end{alignat*}
+
+\end_inset
+
+where 
+\begin_inset Formula $\psi_{t}$
+\end_inset
+
+, 
+\begin_inset Formula $\xi_{t}$
+\end_inset
+
+, 
+\begin_inset Formula $\epsilon_{t}$
+\end_inset
+
+ are log-normally distributed 
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+hspace{4mm}
+\end_layout
+
+\end_inset
+
+We discretize the choice space with 
+\begin_inset Formula $\kappa_{t}\in\{0,0.55\}$
+\end_inset
+
+, 
+\begin_inset Formula $i_{t}\in\{0,1\}$
+\end_inset
+
+, 
+\begin_inset Formula $c_{t}\in\mathbb{R}^{+}$
+\end_inset
+
+, and we change the dynamics of the model such that investing in financial
+ knowledge 
+\begin_inset Formula $i_{t}$
+\end_inset
+
+ affects the next period's expected assets (and not period 
+\begin_inset Formula $t+2$
+\end_inset
+
+).
+ The growth factor 
+\begin_inset Formula $G$
+\end_inset
+
+ is assumed to be 
+\begin_inset Formula $1.03$
+\end_inset
+
+.
+ Modelling-wise, it is also only feasible to invest in the technology 
+\begin_inset Formula $i_{t}$
+\end_inset
+
+ if 
+\begin_inset Formula $c_{\min}<m_{t}-c_{d}$
+\end_inset
+
+, i.e.
+ the government won't pay for investing in the technology.
+\end_layout
+
+\begin_layout Subsection
+Solving the model
+\end_layout
+
+\begin_layout Standard
+To solve the model by backwards induction, we need to evaluate the expectations
+\begin_inset Formula 
+\[
+E_{t}[V_{t+1}(m_{t+1},p_{t+1},f_{t+1})]=\int_{\psi_{t}}\int_{\xi_{t}}\int_{\epsilon_{t}}V_{t+1}(m_{t+1},p_{t+1},f_{t+1})d\epsilon_{t}d\xi_{t}d\psi_{t}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+which can be done via Gauss-Hermite integration as all shocks are log-normally
+ distributed.
+ We draw 
+\begin_inset Formula $8$
+\end_inset
+
+ nodes for each of the three stochastic elements 
+\begin_inset Formula $\{\psi_{n},\xi_{n},\epsilon_{n}\}_{n=1}^{8}$
+\end_inset
+
+, and we then calculate the expectation of the value function given a realizatio
+n of the state space 
+\begin_inset Formula $s_{t}=(m_{t},p_{t},f_{t},e)$
+\end_inset
+
+ and a choice 
+\begin_inset Formula $(c_{t},\kappa_{t},i_{t})$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+E_{t}(V_{t+1}(m_{t+1},p_{t+1},f_{t+1}))=\sum_{j=1}^{8}w_{j}^{\psi}\sum_{i=1}^{8}w_{i}^{\xi}\sum_{k=1}^{8}w_{k}^{\epsilon}V_{t+1}\left(m_{t+1}^{jik},p_{t+1}^{j},f_{t+1}\right)
+\]
+
+\end_inset
+
+where cash-on-hand is given by
+\begin_inset Formula 
+\begin{multline*}
+m_{t+1}^{jik}=\tilde{R}_{\kappa}(f_{t+1})a_{t}+Y_{t+1}=\tilde{R}_{\kappa}(f_{t+1})a_{t}+\left(\xi_{t+1}^{i}\left[Gp_{y,t}\psi_{t+1}^{j}\right]g_{y,e}(t+1)\right)=\\
+\left\{ (1-\kappa_{t})\bar{R}+\kappa_{t}\tilde{R}((1-\delta)f_{t}+i_{t})\right\} a_{t}+\left(\xi_{t+1}^{i}\left[Gp_{y,t}\psi_{t+1}^{j}\right]g_{y,e}(t+1)\right)=\\
+\left\{ (1-\kappa_{t})\bar{R}+\kappa_{t}\exp\left(\bar{r}+r\left((1-\delta)f_{t}+i_{t}\right)\right)\epsilon_{t}^{k}\right\} a_{t}+\left(\xi_{t+1}^{i}\left[Gp_{y,t}\psi_{t+1}^{j}\right]g_{y,e}(t+1)\right)\Leftrightarrow\\
+m_{t+1}^{jik}=\left\{ (1-\kappa_{t})\bar{R}+\kappa_{t}\exp\left(\bar{r}+r\left((1-\delta)f_{t}+i_{t}\right)\right)\epsilon_{t}^{k}\right\} \left[m_{t}+tr_{t}-c_{t}-\pi(i_{t})-c_{d}I(\kappa_{t}>0)\right]+\\
+\left(\xi_{t+1}^{i}\left[Gp_{y,t}\psi_{t+1}^{j}\right]g_{y,e}(t+1)\right)
+\end{multline*}
+
+\end_inset
+
+permanent income 
+\begin_inset Formula 
+\[
+p_{t+1}^{j}=Gp_{t}\psi_{t+1}^{j}
+\]
+
+\end_inset
+
+and financial literacy being conditionally deterministic 
+\begin_inset Formula 
+\[
+f_{t+1}=(1-\delta)f_{t}+i_{t}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Computational aspects
+\end_layout
+
+\begin_layout Standard
+To initialize the value function array in period 
+\begin_inset Formula $T=90$
+\end_inset
+
+, we create a 3-dimensional array where the agent consumes everything such
+ that value function is simply 
+\begin_inset Formula $n_{e,T}u(m_{T}^{q}/n_{e,T})$
+\end_inset
+
+ for all grid-points 
+\begin_inset Formula $m^{q}=m^{1},...,m^{Q}$
+\end_inset
+
+ irrespective of the values of the grid points 
+\begin_inset Formula $p_{T}^{z}$
+\end_inset
+
+ and 
+\begin_inset Formula $f_{T}^{x}$
+\end_inset
+
+.
+ 
+\begin_inset Formula $E_{t}(V_{t+1}(m_{t+1},p_{t+1},f_{t+1}))$
+\end_inset
+
+ is then evaluated by Gauss Hermite integration described above and trilinear
+ interpolation of the value function.
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset bibtex
+LatexCommand bibtex
+bibfiles "Bibliography"
+options "bibtotoc,apalike"
+
+\end_inset
+
+
+\end_layout
+
+\end_body
+\end_document
