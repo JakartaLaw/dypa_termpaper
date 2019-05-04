@@ -2,111 +2,70 @@
 import numpy as np
 from scipy import interpolate
 from scipy.optimize import minimize_scalar
+from scipy.interpolate import LinearNDInterpolator
 from collections import namedtuple
 import datetime
 # Own modules
-from agent import Agent
+from agent import utility, update_f, calc_a, R_tilde
 from parameters import parameters as par
 from modules.utils import hermgauss_lognorm, Struct
+from modules.stategrid import create_statespace
+from modules.namedtuples import StateTuple, ChoiceTuple
+from modules.consumptionpreference import create_consumption_preference_array
+from modules.agepolynomial import create_age_poly_array
+# order: ['m', 'f', 'p', 't']
+# order: ['c', 'kappa', 'i']
 
-StateTuple = namedtuple('statetuple', ['m', 'f', 'p'])
-ChoiceTuple = namedtuple('choicetuple', ['kappa', 'i'])
+class Model():
 
-StatePolicyTuple = namedtuple('statepolicytuple', ['m', 'f', 'p', 't'])
-ChoicePolicyTuple = namedtuple('choicepolicytuple', ['kappa', 'i', 'c'])
+    def __init__(self, par, education_lvl):
 
-class Model(Agent):
-
-    def __init__(self, par, state, education_lvl):
-        super().__init__(par=par, state=state, education_lvl=education_lvl)
-        self.statespace = list()
-        self.choicespace = list()
-        self.policy = dict()
-
-    def create_m_grid(self):
-        # Grid assets
-        grid_m_temp = np.linspace(self.par.m_min, self.par.m_max**self.par.m_tuning, self.par.Nm)
-        grid_m = grid_m_temp ** (1/self.par.m_tuning)
-        return grid_m
-
-    def create_f_grid(self):
-        # Grid financial knowledge
-        grid_f = np.linspace(self.par.f_min, self.par.f_max, self.par.Nf)
-        return grid_f
-
-    def create_p_grid(self):
-        grid_p = np.linspace(self.par.p_min, self.par.p_max, self.par.Np)
-        return grid_p
-
-    def create_statespace(self):
-        '''grid over m, f, p'''
-        m_grid = self.create_m_grid()
-        f_grid = self.create_f_grid()
-        p_grid = self.create_p_grid()
-
-        for m in m_grid:
-            for f in f_grid:
-                for p in p_grid:
-                    state = Struct()
-                    state.m, state.f, state.p = m, f, p
-                    self.statespace.append(state)
-
-    def create_choicespace(self):
-        '''grid over i, kappa'''
-        for i in [0, 1]:
-            for kappa in [0, 55]:
-                self.choicespace.append(ChoiceTuple(kappa = kappa, i = i))
-
-    @staticmethod
-    def create_gauss_hermite():
-        par.nu_y, par.nu_y_w = hermgauss_lognorm(par.Nnu_y, par.sigma_nu_y)
+        assert education_lvl in ['<HS', 'HS', 'College']
+        # create consumption preference
+        par.n = create_consumption_preference_array(education_lvl)
+        par.age_poly = create_age_poly_array(education_lvl)
+        #instantiation
+        self.par = par
 
     # For Jeppe
     @staticmethod
-    def create_interp(x_vals, y_vals):
+    def create_interp(statespace, Vstar):
         """Returns function which interpolates"""
-        return interpolate.interp1d(x_vals, y_vals, kind='linear', fill_value = "extrapolate")
+        return LinearNDInterpolator(statespace, Vstar)
 
-    def create_grids():
-        pass
 
-    def V_integrate(self, c, choice, t):
+    def V_integrate(self, choice, state, par, interpolant):
         '''Calculates E_t(V_t+1) via brute force looping'''
-        V_fut = 0
-        for j_psi in range(1, self.par.Npsi):
-            for i_xi in range(1, self.par.Nxi):
-                for k_eps in range(1, self.par.Neps):
+        V_fut = 0.0
+        for j_psi in range(1, par.Npsi):
+            for i_xi in range(1, par.Nxi):
+                for k_eps in range(1, par.Neps):
 
-                    self.update_f(choice.i) # updateting to f_t+1
-                    r = self.r() # Calculate return today
+                    state = update_f(choice, state, par) # updateting to f_t+1
 
                     #interest factor
-                    interest_factor = self.R_tilde(choice.kappa, shock=self.par.eps[k_eps])
-                    assets = self.a(c, choice.i, choice.kappa, t)
+                    interest_factor = R_tilde(choice, shock=par.eps[k_eps])
+                    assets = calc_a(choice, state, par)
 
-                    try:
-                        income = par.xi[i_xi] * (par.G * self.state.p *  par.psi[j_psi] + self.par.age_poly[t+1] +  self.par.age_poly[t])
-                    except:
-                        raise Exception(t + 1, len(self.par.age_poly))
-
+                    income = par.xi[i_xi] * (par.G * state.p * par.psi[j_psi] + par.age_poly[t+1] +  par.age_poly[t])
 
                     integrand = interest_factor * assets + income
 
-                    V = self.par.psi_w[j_psi] * self.par.xi_w[i_xi] * self.par.eps_w[k_eps] * self.V_plus_interp(integrand) # GH weighting
+                    V = par.psi_w[j_psi] * par.xi_w[i_xi] * par.eps_w[k_eps] * self.V_plus_interp(integrand) # GH weighting
 
                     V_fut += V
 
-                    self.reset_f()
+        return V_fut
 
-        return(V_fut)
-
-    def find_V(self, choice, t):
+    def find_V(self, i, kappa, state, interpolant):
         '''Find optimal c for all states for given choices (i,kappa) in period t'''
 
-        if t == self.par.max_age - 1:
-            Vfunc = lambda c: self.utility(c, t)
+        if state.t == self.par.max_age - 1:
+            Vfunc = lambda c: utility(ChoiceTuple(c, kappa, i), state, self.par)
         else:
-            Vfunc = lambda c: self.utility(c, t) + self.par.beta * self.par.mortality[t] * self.V_integrate(c, choice, t)
+            Vfunc = lambda c: utility(ChoiceTuple(c, kappa, i), state, self.par) + \
+            self.par.beta * self.par.mortality[state.t] * \
+            self.V_integrate(ChoiceTuple(c, kappa, i), state, self.par, interpolant)
 
         # Optimizer
         # Convert function to negative for minimization
@@ -114,61 +73,82 @@ class Model(Agent):
 
         # c) Find optimum
         res = minimize_scalar(Vfunc_neg, tol = self.par.tolerance
-                              , bounds = [1,self.state.m], method = "bounded")
+                              , bounds = [1, state.m], method = "bounded")
 
         Vstar, Cstar = float(-res.fun), float(res.x)
 
         return Vstar, Cstar
 
-    def find_V_for_choices(self, t):
+    def find_V_for_choices(self, state, interpolant):
         '''Find optimal V for all i, k in period t'''
 
         #initialize V and C
-        Vstar, Cstar = - np.inf, None
+        V, C = - np.inf, None
+        choices = np.array(((0.0, 0.0), (1., 0.), (0., 0.55), (1., 0.55)))
 
-        for choice in self.choicespace:
-            V, C = self.find_V(choice, t)
-            if V > Vstar:
-                _c = choice
-                Cstar = Cstar
+        for i, kappa in choices:
 
-        spt = StatePolicyTuple(m = self.state.m, f = self.state.f, p = self.state.p, t=t)
-        cpt = ChoicePolicyTuple(kappa = _c.kappa, i = _c.i, c = Cstar)
-        self.policy[spt] = cpt
+            #using notation _V, _C for best V, C for given kappa, i
+            _V, _C = self.find_V(i, kappa, state, interpolant)
+            if _V > V:
+                C = _C
+
+        return V, C
 
 
-    def create_V_interp(self, Vstar, t):
-        try:
-            self.V_plus_interp = self.create_interp(self.par.grid_M, Vstar[t+1])
-        except:
-            print(Vstar)
-            print('time is:', t,'========')
-            print(self.policy)
-            raise Exception()
+    @staticmethod
+    def create_Vstar(statespace):
+        """Creates data container for Vstar"""
+        return np.empty(statespace.shape[0])
 
-    def initialize_Vstar(self):
-        Vstar = dict()
-        Vstar[self.par.max_age] = np.array([self.utility(m, self.par.max_age) for m in self.par.grid_M])
+    @staticmethod
+    def create_Cstar(statespace):
+        """Creates data container for Vstar"""
+        return np.empty((statespace.shape[0], 3))
+
+    def initialize_Vstar(self, statespace):
+        Vstar = self.create_Vstar(statespace)
+        for state_index, s in enumerate(statespace):
+            m, f, p, t = s[0], s[1], s[2], self.par.max_age
+            state, choice = StateTuple(m, f, p, t), ChoiceTuple(m, 0.0, 0.0) #consuming all
+            Vstar[state_index] = utility(choice, state, self.par)
         return Vstar
 
-    def solve(self):
-        # create state_space grid
-        self.create_statespace()
-        # create choice_space grid (over i og kappa)
-        self.create_choicespace()
+    def initialize_Cstar(self, statespace):
+        Cstar = self.create_Cstar(statespace)
+        for state_index, s in enumerate(statespace):
+            m, f, p, t = s[0], s[1], s[2], self.par.max_age
+            choice = ChoiceTuple(m, 0.0, 0.0) #consuming all
+            Cstar[state_index] = choice
+        return Cstar
 
-        # V in period T
-        Vstar = self.initialize_Vstar()
+    def solve(self):
+        # create state_space grid values. order (m, f, p)
+        statespace = create_statespace(self.par)
+
+        V_solution, C_solution = dict(), dict()
+
+        # V, C in period T
+        Vstar = self.initialize_Vstar(statespace)
+        Cstar = self.initialize_Cstar(statespace)
         # backwards loop:
 
         # 1) (V_star_interpolant) interpolant over næste periode mellem m_grid og v_star_t+1
         for t in reversed(range(par.start_age, par.max_age)):
             print('Solution at time step t: ', t, ', time is: ', datetime.datetime.utcnow())
-            self.create_V_interp(Vstar,t)
-            for s in self.statespace:
-                self.state = s
-                self.find_V_for_choices(t)
 
-                    
+            V_solution[t], C_solution = Vstar, Cstar
 
-        # 2) optimér mht c
+            Vstar_plus, Cstar_plus = self.create_Vstar(statespace), self.create_Cstar(statespace)
+            interpolant = self.create_interp(statespace, Vstar)
+
+            for s_ix, s in enumerate(statespace):
+                m, f, p = s[0], s[1], s[2]
+                state = StateTuple(m, f, p, t)
+                V, C = self.find_V_for_choices(state, interpolant)
+                Vstar_plus[s_ix], Cstar_plus[s_ix] = V, C
+
+            Vstar, Cstar = Vstar_plus, Cstar_plus
+
+        return V_solution, C_solution
+#%%
