@@ -16,6 +16,8 @@ from modules.agepolynomial import create_age_poly_array
 # order: ['m', 'f', 'p', 't']
 # order: ['c', 'kappa', 'i']
 
+from numba import jit
+
 class Model():
 
     def __init__(self, par, education_lvl):
@@ -30,10 +32,12 @@ class Model():
     # For Jeppe
     @staticmethod
     def create_interp(statespace, Vstar):
-        """Returns function which interpolates"""
+        """Returns function which interpolates.
+        The order is: (m, f, p)
+        """
         return LinearNDInterpolator(statespace, Vstar)
 
-
+    # @jit(nopython=True)
     def V_integrate(self, choice, state, par, interpolant):
         '''Calculates E_t(V_t+1) via brute force looping'''
         V_fut = 0.0
@@ -44,19 +48,20 @@ class Model():
                     state = update_f(choice, state, par) # updateting to f_t+1
 
                     #interest factor
-                    interest_factor = R_tilde(choice, shock=par.eps[k_eps])
+                    interest_factor = R_tilde(choice, state, par, shock=par.eps[k_eps])
                     assets = calc_a(choice, state, par)
 
-                    income = par.xi[i_xi] * (par.G * state.p * par.psi[j_psi] + par.age_poly[t+1] +  par.age_poly[t])
+                    income = par.xi[i_xi] * (par.G * state.p * par.psi[j_psi] + par.age_poly[state.t+1] +  par.age_poly[state.t])
 
                     integrand = interest_factor * assets + income
 
-                    V = par.psi_w[j_psi] * par.xi_w[i_xi] * par.eps_w[k_eps] * self.V_plus_interp(integrand) # GH weighting
+                    V = par.psi_w[j_psi] * par.xi_w[i_xi] * par.eps_w[k_eps] * interpolant((integrand, state.f, state.p)) # GH weighting
 
                     V_fut += V
 
         return V_fut
 
+    # @jit(nopython=True)
     def find_V(self, i, kappa, state, interpolant):
         '''Find optimal c for all states for given choices (i,kappa) in period t'''
 
@@ -79,6 +84,7 @@ class Model():
 
         return Vstar, Cstar
 
+    # @jit(nopython=True)
     def find_V_for_choices(self, state, interpolant):
         '''Find optimal V for all i, k in period t'''
 
@@ -122,6 +128,7 @@ class Model():
             Cstar[state_index] = choice
         return Cstar
 
+    # @jit(nopython=True)
     def solve(self):
         # create state_space grid values. order (m, f, p)
         statespace = create_statespace(self.par)
@@ -143,6 +150,8 @@ class Model():
             interpolant = self.create_interp(statespace, Vstar)
 
             for s_ix, s in enumerate(statespace):
+                if s_ix % 5 == 0:
+                    print(s_ix,  'time is: ', datetime.datetime.utcnow())
                 m, f, p = s[0], s[1], s[2]
                 state = StateTuple(m, f, p, t)
                 V, C = self.find_V_for_choices(state, interpolant)

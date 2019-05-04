@@ -15,6 +15,7 @@ pandas = "*"
 scipy = "*"
 matplotlib = "*"
 scikit-learn = "*"
+numba = "*"
 
 [requires]
 python_version = "3.7"
