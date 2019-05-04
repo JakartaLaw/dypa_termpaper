@@ -123,8 +123,8 @@ cite{lusardi2017optimal}
 
 \end_inset
 
- is reformulated to incorporate some dynamic elements from the Buffer Stock
- model that allows for feasible tracking of the state space.
+ is reformulated to incorporate some dynamic elements from the Deaton-Caroll
+ Buffer-stock model that allows for feasible tracking of permanent income.
  Let the state space be given by 
 \begin_inset Formula 
 \[
@@ -171,7 +171,7 @@ cite{lusardi2017optimal}
 \end_inset
 
  the education level.
- Then the value function can be represented in recursive form as 
+ Then, the value function can be represented in recursive form as 
 \begin_inset Formula 
 \[
 V_{t}(s_{t})=\underset{c_{t},i_{t},\kappa_{t}}{\max}n_{e,t}u(c_{t}/n_{e,t})+\beta\rho_{e,t}E_{t}[V_{t+1}(s_{t+1})]
@@ -223,7 +223,7 @@ hspace{4mm}
 
 \end_inset
 
-We discretize the choice space with 
+We discretize some of the choice space with 
 \begin_inset Formula $\kappa_{t}\in\{0,0.55\}$
 \end_inset
 
@@ -231,7 +231,7 @@ We discretize the choice space with
 \begin_inset Formula $i_{t}\in\{0,1\}$
 \end_inset
 
-, 
+ and let consumption stay continuous 
 \begin_inset Formula $c_{t}\in\mathbb{R}^{+}$
 \end_inset
 
@@ -271,7 +271,7 @@ Solving the model
 \end_layout
 
 \begin_layout Standard
-To solve the model by backwards induction, we need to evaluate the expectations
+To solve the model by backwards induction, we need to evaluate the expectation
 \begin_inset Formula 
 \[
 E_{t}[V_{t+1}(m_{t+1},p_{t+1},f_{t+1})]=\int_{\psi_{t}}\int_{\xi_{t}}\int_{\epsilon_{t}}V_{t+1}(m_{t+1},p_{t+1},f_{t+1})d\epsilon_{t}d\xi_{t}d\psi_{t}
@@ -349,7 +349,13 @@ Computational aspects
 \end_layout
 
 \begin_layout Standard
-To initialize the value function array in period 
+We solve the model for the three different types of education group agents
+ seperately, which reduces the computational state space to 
+\begin_inset Formula $s_{t}=(m_{t},p_{t},f_{t})$
+\end_inset
+
+ for each run on an agent.
+ To initialize the value function array in period 
 \begin_inset Formula $T=90$
 \end_inset
 
@@ -371,12 +377,16 @@ To initialize the value function array in period
 \end_inset
 
 .
- 
+ Moving backwards over time, for all 
+\begin_inset Formula $t<T$
+\end_inset
+
+, the expectation 
 \begin_inset Formula $E_{t}(V_{t+1}(m_{t+1},p_{t+1},f_{t+1}))$
 \end_inset
 
  is then evaluated by Gauss Hermite integration described above and trilinear
- interpolation of the value function.
+ interpolation of the value function array.
 \end_layout
 
 \begin_layout Standard
