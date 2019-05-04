@@ -130,75 +130,8 @@ Introduction
 
 \begin_layout Standard
 What explains wealth inequality between socioeconomic groups at retirement?
- While differences in earnings and their subsequent accumulated returns
- over the life-time can account for a large share of the differences in
- wealth in a simple life cycle model, it can not explain the differences
- in ratios of income and wealth 
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-citep{hubbard1995precautionary}
-\end_layout
-
-\end_inset
-
-.
- Employing a model with a mechanism where financial knowledge enables individual
-s to better allocate resources over their lifetimes with stochastic returns
- and earnings, 
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-cite{lusardi2017optimal}
-\end_layout
-
-\end_inset
-
- estimate that staggering 
-\begin_inset Formula $30-40\%$
-\end_inset
-
- of retirement wealth inequality between education groups can be accounted
- for by this simple mechanism.
- The idea is that because higher income and education groups are linked
- together, the net returns to investing time, money and effort in allocating
- one's ressources to the best risk-adjusted returns is higher for higher
- education groups.
- This, in turn, amplifies the differences in wealth accummulation as lower
- education groups can not profitably escape a low-return world because it
- is not optimal for them to invest in financial knowledge.
- 
-\end_layout
-
-\begin_layout Standard
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-hspace{4mm}
-\end_layout
-
-\end_inset
-
-This mechanism is interesting, but the estimated effect of 
-\begin_inset Formula $30-40\%$
-\end_inset
-
- is very large and likely vulnerable to changes in model assumptions, which
- this paper will investigate.
- What happens when we change the cost function on acquiring financial knowledge?
- What happens...
+ While differences in earnings over the life-time accounts for a large share
+ of the differences in wealth, it does not explain
 \end_layout
 
 \begin_layout Section
@@ -224,48 +157,8 @@ cite{lusardi2017optimal}
 \end_inset
 
  is reformulated to incorporate some dynamic elements from the Deaton-Caroll
- Buffer-stock model that allows for feasible tracking of permanent income,
- and we abstract from medical-related expenditures (
-\begin_inset Formula $\text{oop}_{e,t}$
-\end_inset
-
- in the original model)
-\end_layout
-
-\begin_layout Standard
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-hspace{4mm}
-\end_layout
-
-\end_inset
-
-We model agents from age 
-\begin_inset Formula $t_{min}=25$
-\end_inset
-
- to age 
-\begin_inset Formula $T=90$
-\end_inset
-
- that have an exogenously given education level 
-\begin_inset Formula $e\in\{\text{Less than highschool, High school, College+}\}$
-\end_inset
-
-, which determines diffences in mortality rates 
-\begin_inset Formula $\rho_{e,t}$
-\end_inset
-
-, 
-\end_layout
-
-\begin_layout Standard
-Let the state space be given by 
+ Buffer-stock model that allows for feasible tracking of permanent income.
+ Let the state space be given by 
 \begin_inset Formula 
 \[
 s_{t}=(m_{t},p_{t},f_{t},e)
@@ -313,25 +206,25 @@ cite{lusardi2017optimal}
  the education level.
  Then, the value function can be represented in recursive form as 
 \begin_inset Formula 
-\begin{equation}
-V_{t}(s_{t})=\underset{c_{t},i_{t},\kappa_{t}}{\max}n_{e,t}u(c_{t}/n_{e,t})+\beta\rho_{e,t}E_{t}[V_{t+1}(s_{t+1})]\label{eq:value_func}
-\end{equation}
+\[
+V_{t}(s_{t})=\underset{c_{t},i_{t},\kappa_{t}}{\max}n_{e,t}u(c_{t}/n_{e,t})+\beta\rho_{e,t}E_{t}[V_{t+1}(s_{t+1})]
+\]
 
 \end_inset
 
 such that
 \begin_inset Formula 
-\begin{alignat}{1}
-a_{t} & =m_{t}+tr_{t}-c_{t}-\pi(i_{t})-c_{d}I(\kappa_{t}>0)\label{eq:asset_acc}\\
-m_{t+1} & =\tilde{R}_{\kappa}(f_{t+1})a_{t}+Y_{t+1}\label{eq:cash_on_hand}\\
-Y_{t+1} & =\xi_{t+1}p_{t+1}g_{y,e}(t+1)\label{eq:income_process}\\
-p_{t+1} & =Gp_{t}\psi_{t+1}\label{eq:perm_income}\\
-f_{t+1} & =(1-\delta)f_{t}+i_{t}\label{eq:fin_lit}\\
-\tilde{R}_{\kappa}(f_{t+1}) & =(1-\kappa_{t})\bar{R}+\kappa_{t}\tilde{R}(f_{t+1})\label{eq:return}\\
-\log\tilde{R}(f_{t+1}) & =\bar{r}+r(f_{t})+\tilde{\epsilon}_{t},\tilde{\epsilon}_{t}\sim N(0,\sigma_{\epsilon}^{2})\Rightarrow\nonumber \\
-\tilde{R}(f_{t+1}) & =\exp\left(\bar{r}+r(f_{t})\right)\exp(\tilde{\epsilon}_{t})=\exp\left(\bar{r}+r(f_{t})\right)\epsilon_{t}\label{eq:stoch_return}\\
-tr_{t} & =\max(c_{\min}-m_{t},0)\label{eq:transfers}
-\end{alignat}
+\begin{alignat*}{1}
+a_{t} & =m_{t}+tr_{t}-c_{t}-\pi(i_{t})-c_{d}I(\kappa_{t}>0)\\
+m_{t+1} & =\tilde{R}_{\kappa}(f_{t+1})a_{t}+Y_{t+1}\\
+Y_{t+1} & =\xi_{t+1}p_{t+1}g_{y,e}(t+1)\\
+p_{t+1} & =Gp_{t}\psi_{t+1}\\
+f_{t+1} & =(1-\delta)f_{t}+i_{t}\\
+\tilde{R}_{\kappa}(f_{t+1}) & =(1-\kappa_{t})\bar{R}+\kappa_{t}\tilde{R}(f_{t+1})\\
+\log\tilde{R}(f_{t+1}) & =\bar{r}+r(f_{t})+\tilde{\epsilon}_{t},\tilde{\epsilon}_{t}\sim N(0,\sigma_{\epsilon}^{2})\Rightarrow\\
+\tilde{R}(f_{t+1}) & =\exp\left(\bar{r}+r(f_{t})\right)\exp(\tilde{\epsilon}_{t})=\exp\left(\bar{r}+r(f_{t})\right)\epsilon_{t}\\
+tr_{t} & =\max(c_{\min}-m_{t},0)
+\end{alignat*}
 
 \end_inset
 
@@ -347,7 +240,7 @@ where
 \begin_inset Formula $\epsilon_{t}$
 \end_inset
 
- are log-normally distributed.
+ are log-normally distributed 
 \end_layout
 
 \begin_layout Standard
