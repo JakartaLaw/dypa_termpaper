@@ -3,7 +3,7 @@ import numpy as np
 from scipy import interpolate
 from scipy.optimize import minimize_scalar
 from collections import namedtuple
-
+import datetime
 # Own modules
 from agent import Agent
 from parameters import parameters as par
@@ -138,7 +138,13 @@ class Model(Agent):
 
 
     def create_V_interp(self, Vstar, t):
-        self.V_plus_interp = self.create_interp(self.par.grid_M, Vstar[t+1])
+        try:
+            self.V_plus_interp = self.create_interp(self.par.grid_M, Vstar[t+1])
+        except:
+            print(Vstar)
+            print('time is:', t,'========')
+            print(self.policy)
+            raise Exception()
 
     def initialize_Vstar(self):
         Vstar = dict()
@@ -157,9 +163,12 @@ class Model(Agent):
 
         # 1) (V_star_interpolant) interpolant over næste periode mellem m_grid og v_star_t+1
         for t in reversed(range(par.start_age, par.max_age)):
+            print('Solution at time step t: ', t, ', time is: ', datetime.datetime.utcnow())
             self.create_V_interp(Vstar,t)
             for s in self.statespace:
                 self.state = s
                 self.find_V_for_choices(t)
+
+                    
 
         # 2) optimér mht c
