@@ -440,7 +440,71 @@ reference "eq:income_process"
 
 \end_inset
 
- describes the income process
+ describes the income process as a function of both permanent income and
+ an age polynomial for the given education group.
+ 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:perm_income"
+
+\end_inset
+
+ describes the permanent income process, where 
+\begin_inset Formula $G$
+\end_inset
+
+ is an underlying growth rate.
+ 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:fin_lit"
+
+\end_inset
+
+ describes the evolution of financial literacy, where 
+\begin_inset Formula $\delta$
+\end_inset
+
+ is the depreciation rate.
+ 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:return"
+
+\end_inset
+
+ gives the return on assets in period 
+\begin_inset Formula $t$
+\end_inset
+
+, which is a weighted sum of risk-free return factor 
+\begin_inset Formula $\bar{R}$
+\end_inset
+
+ and stochastic (stocks) return 
+\begin_inset Formula $\tilde{R}(f_{t+1})$
+\end_inset
+
+, which is function in 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:stoch_return"
+
+\end_inset
+
+ of the risk-free rate 
+\begin_inset Formula $\bar{r}$
+\end_inset
+
+ and of 
+\begin_inset Formula $r(f_{t})$
+\end_inset
+
+ where 
+\begin_inset Formula $r'(f_{t})>0$
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Standard
@@ -456,7 +520,8 @@ hspace{4mm}
 
 \end_inset
 
-We discretize some of the choice space with 
+We depart from the original implementation and discretize part of the choice
+ space with 
 \begin_inset Formula $\kappa_{t}\in\{0,0.55\}$
 \end_inset
 
@@ -478,17 +543,46 @@ We discretize some of the choice space with
 \end_inset
 
 ).
- The growth factor 
-\begin_inset Formula $G$
+ The choice of the two possible states of 
+\begin_inset Formula $\kappa$
 \end_inset
 
- is assumed to be 
-\begin_inset Formula $1.03$
+ is motivated by Table 2 (p.
+ 453) in 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+cite{lusardi2017optimal}
+\end_layout
+
+\end_inset
+
+, where the observed share 
+\begin_inset Formula $E(\kappa_{t}\mid\kappa_{t}>0)$
+\end_inset
+
+ is around 
+\begin_inset Formula $55\%$
+\end_inset
+
+ across education groups, whereas their model predicts shares around 
+\begin_inset Formula $97\%$
 \end_inset
 
 .
- Modelling-wise, it is also only feasible to invest in the technology 
-\begin_inset Formula $i_{t}$
+ Thus, not only will our implementation reduce the choice space for 
+\begin_inset Formula $\kappa$
+\end_inset
+
+, it can possibly also aid in a better fit to the data, as the original
+ model clearly overshoots the amount people invest in risky assets.
+ Finally, we follow the original paper where it is only feasible to invest
+ in the technology 
+\begin_inset Formula $\kappa_{t}>0$
 \end_inset
 
  if 
@@ -496,7 +590,7 @@ We discretize some of the choice space with
 \end_inset
 
 , i.e.
- the government won't pay for investing in the technology.
+ the government won't pay for obtaining the technology.
 \end_layout
 
 \begin_layout Subsection
@@ -549,11 +643,11 @@ E_{t}(V_{t+1}(m_{t+1},p_{t+1},f_{t+1}))=\sum_{j=1}^{8}w_{j}^{\psi}\sum_{i=1}^{8}
 where cash-on-hand is given by
 \begin_inset Formula 
 \begin{multline*}
-m_{t+1}^{jik}=\tilde{R}_{\kappa}(f_{t+1})a_{t}+Y_{t+1}=\tilde{R}_{\kappa}(f_{t+1})a_{t}+\left(\xi_{t+1}^{i}\left[Gp_{y,t}\psi_{t+1}^{j}\right]g_{y,e}(t+1)\right)=\\
-\left\{ (1-\kappa_{t})\bar{R}+\kappa_{t}\tilde{R}((1-\delta)f_{t}+i_{t})\right\} a_{t}+\left(\xi_{t+1}^{i}\left[Gp_{y,t}\psi_{t+1}^{j}\right]g_{y,e}(t+1)\right)=\\
-\left\{ (1-\kappa_{t})\bar{R}+\kappa_{t}\exp\left(\bar{r}+r\left((1-\delta)f_{t}+i_{t}\right)\right)\epsilon_{t}^{k}\right\} a_{t}+\left(\xi_{t+1}^{i}\left[Gp_{y,t}\psi_{t+1}^{j}\right]g_{y,e}(t+1)\right)\Leftrightarrow\\
+m_{t+1}^{jik}=\tilde{R}_{\kappa}(f_{t+1})a_{t}+Y_{t+1}=\tilde{R}_{\kappa}(f_{t+1})a_{t}+\left(\xi_{t+1}^{i}\left[Gp_{y,t}\psi_{t+1}^{j}\right]+g_{y,e}(t+1)\right)=\\
+\left\{ (1-\kappa_{t})\bar{R}+\kappa_{t}\tilde{R}((1-\delta)f_{t}+i_{t})\right\} a_{t}+\left(\xi_{t+1}^{i}\left[Gp_{y,t}\psi_{t+1}^{j}\right]+g_{y,e}(t+1)\right)=\\
+\left\{ (1-\kappa_{t})\bar{R}+\kappa_{t}\exp\left(\bar{r}+r\left((1-\delta)f_{t}+i_{t}\right)\right)\epsilon_{t}^{k}\right\} a_{t}+\left(\xi_{t+1}^{i}\left[Gp_{y,t}\psi_{t+1}^{j}\right]+g_{y,e}(t+1)\right)\Leftrightarrow\\
 m_{t+1}^{jik}=\left\{ (1-\kappa_{t})\bar{R}+\kappa_{t}\exp\left(\bar{r}+r\left((1-\delta)f_{t}+i_{t}\right)\right)\epsilon_{t}^{k}\right\} \left[m_{t}+tr_{t}-c_{t}-\pi(i_{t})-c_{d}I(\kappa_{t}>0)\right]+\\
-\left(\xi_{t+1}^{i}\left[Gp_{y,t}\psi_{t+1}^{j}\right]g_{y,e}(t+1)\right)
+\left(\xi_{t+1}^{i}\left[Gp_{y,t}\psi_{t+1}^{j}\right]+g_{y,e}(t+1)\right)
 \end{multline*}
 
 \end_inset
