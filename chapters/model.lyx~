@@ -261,11 +261,57 @@ We model agents from age
 \begin_inset Formula $\rho_{e,t}$
 \end_inset
 
-, 
+, household utility functions 
+\begin_inset Formula $n_{e,t}u(c_{t}/n_{e,t})$
+\end_inset
+
+ and a deterministically given income path 
+\begin_inset Formula $g_{e}(t)$
+\end_inset
+
+ that are all known to the agent.
+ Similar to the Deaton-Caroll Buffer-stock model, each agent has a stochastic
+ permanent income process 
+\begin_inset Formula $p_{t}$
+\end_inset
+
+ that explains part of the income for agents, but the accummulation of assets
+ are now also determined by an endogenous return 
+\begin_inset Formula $\bar{R}_{\kappa}(f_{t+1})$
+\end_inset
+
+ that is a function of an endogenously determined financial literacy 
+\begin_inset Formula $f_{t+1}(i_{t},f_{t})$
+\end_inset
+
+ and the shares invested in a risky asset 
+\begin_inset Formula $\kappa$
+\end_inset
+
+, where 
+\begin_inset Formula $i_{t}\in\{0,1\}$
+\end_inset
+
+ is a dummy for whether the agent chooses to invest or not in financial
+ literacy in period 
+\begin_inset Formula $t$
+\end_inset
+
+.
+ Broadly speaking, financial literacy can be thought of as an acquisition
+ of particular skills and having information and awareness of financial
+ products.
+ Over a lifetime, agents therefore choose in each period 
+\begin_inset Formula $t$
+\end_inset
+
+ how much to consume, whether to invest in financial literacy or not, and
+ how much to invest in a risky asset so as to maximize the sum of discounted
+ utilities.
+ Formally, let the state space be given by 
 \end_layout
 
 \begin_layout Standard
-Let the state space be given by 
 \begin_inset Formula 
 \[
 s_{t}=(m_{t},p_{t},f_{t},e)
@@ -324,30 +370,76 @@ such that
 \begin{alignat}{1}
 a_{t} & =m_{t}+tr_{t}-c_{t}-\pi(i_{t})-c_{d}I(\kappa_{t}>0)\label{eq:asset_acc}\\
 m_{t+1} & =\tilde{R}_{\kappa}(f_{t+1})a_{t}+Y_{t+1}\label{eq:cash_on_hand}\\
-Y_{t+1} & =\xi_{t+1}p_{t+1}g_{y,e}(t+1)\label{eq:income_process}\\
-p_{t+1} & =Gp_{t}\psi_{t+1}\label{eq:perm_income}\\
+Y_{t+1} & =\xi_{t+1}p_{t+1}+g_{y,e}(t+1),\:\log(\xi_{t+1})\sim N(0,\sigma_{\xi}^{2})\label{eq:income_process}\\
+p_{t+1} & =Gp_{t}\psi_{t+1},\:\log(\psi_{t+1})\sim N(0,\sigma_{\psi}^{2})\label{eq:perm_income}\\
 f_{t+1} & =(1-\delta)f_{t}+i_{t}\label{eq:fin_lit}\\
 \tilde{R}_{\kappa}(f_{t+1}) & =(1-\kappa_{t})\bar{R}+\kappa_{t}\tilde{R}(f_{t+1})\label{eq:return}\\
 \log\tilde{R}(f_{t+1}) & =\bar{r}+r(f_{t})+\tilde{\epsilon}_{t},\tilde{\epsilon}_{t}\sim N(0,\sigma_{\epsilon}^{2})\Rightarrow\nonumber \\
-\tilde{R}(f_{t+1}) & =\exp\left(\bar{r}+r(f_{t})\right)\exp(\tilde{\epsilon}_{t})=\exp\left(\bar{r}+r(f_{t})\right)\epsilon_{t}\label{eq:stoch_return}\\
+\tilde{R}(f_{t+1}) & =\exp\left(\bar{r}+r(f_{t})\right)\exp(\tilde{\epsilon}_{t})=\exp\left(\bar{r}+r(f_{t})\right)\epsilon_{t},\:\log(\epsilon_{t})\sim N(0,\sigma_{\epsilon}^{2})\label{eq:stoch_return}\\
 tr_{t} & =\max(c_{\min}-m_{t},0)\label{eq:transfers}
 \end{alignat}
 
 \end_inset
 
 where 
-\begin_inset Formula $\psi_{t}$
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:asset_acc"
+
 \end_inset
 
-, 
-\begin_inset Formula $\xi_{t}$
+ is the accummulation of assets, where 
+\begin_inset Formula $m_{t}$
 \end_inset
 
-, 
-\begin_inset Formula $\epsilon_{t}$
+ is cash-on-hand, 
+\begin_inset Formula $tr_{t}$
 \end_inset
 
- are log-normally distributed.
+ government transfers that ensures a minimum income level (see 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:transfers"
+
+\end_inset
+
+), 
+\begin_inset Formula $c_{t}$
+\end_inset
+
+ consumption, 
+\begin_inset Formula $\pi(i_{t})$
+\end_inset
+
+ the cost of investing in financial literacy and 
+\begin_inset Formula $c_{d}$
+\end_inset
+
+ the fixed cost of placing funds in a risky asset.
+ 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:cash_on_hand"
+
+\end_inset
+
+ describes the next-period cash-on-hand, where 
+\begin_inset Formula $\tilde{R}_{\kappa}(f_{t+1})$
+\end_inset
+
+ is the endogenous return function and 
+\begin_inset Formula $Y_{t+1}$
+\end_inset
+
+ is next-period income.
+ 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:income_process"
+
+\end_inset
+
+ describes the income process
 \end_layout
 
 \begin_layout Standard
