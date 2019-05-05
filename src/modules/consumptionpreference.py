@@ -56,4 +56,4 @@ def create_consumption_preference_array(e_lvl):
     assert e_lvl in names.keys()
     f = interpolate.interp1d(age, names[e_lvl], kind='linear', fill_value = "extrapolate")
 
-    return np.array([float(f(_age)) for _age in range(0, 90 + 1)])
+    return np.array([float(f(_age)) for _age in range(0, 90 + 1)], dtype=np.float32)
