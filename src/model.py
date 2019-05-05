@@ -22,13 +22,7 @@ NUMBER_OF_ITERATIONS = 0
 
 class Model():
 
-    def __init__(self, par, education_lvl):
-
-        assert education_lvl in ['<HS', 'HS', 'College']
-        # create consumption preference
-        par.n = create_consumption_preference_array(education_lvl)
-        par.age_poly = create_age_poly_array(education_lvl)
-        #instantiation
+    def __init__(self, par):
         self.par = par
 
     # For Jeppe
@@ -48,9 +42,9 @@ class Model():
 
         V_fut = 0.0
         # refactored loop to return a value and weight from gaus_hermite
-        for psi, psi_w in range(1, par.Npsi):
-            for xi, xi_w in range(1, par.Nxi):
-                for eps, eps_w in range(1, par.Neps):
+        for psi, psi_w in par.psi:
+            for xi, xi_w in par.xi:
+                for eps, eps_w in par.eps:
 
                     state = update_f(choice, state, par) # updateting to f_t+1
                     interest_factor = R_tilde(choice, state, par, shock=eps)
