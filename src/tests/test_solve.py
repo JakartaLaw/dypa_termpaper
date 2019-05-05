@@ -6,5 +6,5 @@ from modules.utils import Struct
 from collections import namedtuple
 
 def test_can_call_find_V():
-    m = Model(par=par)
-    m.solve()
+    m = Model()
+    m.solve(par)
