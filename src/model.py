@@ -18,6 +18,8 @@ from modules.agepolynomial import create_age_poly_array
 
 from numba import jit
 
+NUMBER_OF_ITERATIONS = 0
+
 class Model():
 
     def __init__(self, par, education_lvl):
@@ -40,22 +42,25 @@ class Model():
     # @jit(nopython=True)
     def V_integrate(self, choice, state, par, interpolant):
         '''Calculates E_t(V_t+1) via brute force looping'''
+
+        global NUMBER_OF_ITERATIONS
+        NUMBER_OF_ITERATIONS = NUMBER_OF_ITERATIONS + 1
+
         V_fut = 0.0
-        for j_psi in range(1, par.Npsi):
-            for i_xi in range(1, par.Nxi):
-                for k_eps in range(1, par.Neps):
+        # refactored loop to return a value and weight from gaus_hermite
+        for psi, psi_w in range(1, par.Npsi):
+            for xi, xi_w in range(1, par.Nxi):
+                for eps, eps_w in range(1, par.Neps):
 
                     state = update_f(choice, state, par) # updateting to f_t+1
-
-                    #interest factor
-                    interest_factor = R_tilde(choice, state, par, shock=par.eps[k_eps])
+                    interest_factor = R_tilde(choice, state, par, shock=eps)
                     assets = calc_a(choice, state, par)
 
-                    income = par.xi[i_xi] * (par.G * state.p * par.psi[j_psi] + par.age_poly[state.t+1] +  par.age_poly[state.t])
+                    income = xi * (par.G * state.p * psi + par.age_poly[state.t+1] +  par.age_poly[state.t])
 
                     integrand = interest_factor * assets + income
 
-                    V = par.psi_w[j_psi] * par.xi_w[i_xi] * par.eps_w[k_eps] * interpolant((integrand, state.f, state.p)) # GH weighting
+                    V = psi_w * xi_w * eps_w * interpolant((integrand, state.f, state.p)) # GH weighting
 
                     V_fut += V
 
@@ -150,6 +155,7 @@ class Model():
             interpolant = self.create_interp(statespace, Vstar)
 
             for s_ix, s in enumerate(statespace):
+                print(NUMBER_OF_ITERATIONS)
                 if s_ix % 5 == 0:
                     print(s_ix,  'time is: ', datetime.datetime.utcnow())
                 m, f, p = s[0], s[1], s[2]

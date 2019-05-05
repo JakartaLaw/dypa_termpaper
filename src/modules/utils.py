@@ -11,12 +11,21 @@ class Struct():
 
 
 def hermgauss_lognorm(n, sigma):
+    """returns np.array of shape (n, 2)
+
+    x in first column, w in second column.
+
+    Easy to iterate over!
+
+    for psi, psi_w in psi:
+        <do loop>
+    """
 
     x, w = hermgauss(n)
     x = np.exp(x*np.sqrt(2)*sigma-0.5*sigma**2);
     w = w/np.sqrt(np.pi);
 
-    return x, w
+    return np.array((x, w), dtype=np.float32).T
 
 def create_mortality():
     # Mortality from http://www.bandolier.org.uk/booth/Risk/dyingage.html
@@ -30,4 +39,4 @@ def create_mortality():
     mort_75 = 1/((15+21+6+7)/4) * np.ones(15)
 
     mort = np.append(mort_0_14, np.append(mort_15_24, np.append(mort_25_34, np.append(mort_35_44, np.append(mort_45_54, np.append(mort_55_64, np.append(mort_65_74, mort_75)))))))
-    return mort
+    return np.array(mort, dype=np.float32)
