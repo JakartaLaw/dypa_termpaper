@@ -28,11 +28,9 @@ spec = [
     ("R_bar", float32,),
     ("G", float32,),
     ("tolerance", float32,),
-    ("psi", float32[:, :],),
-    ("xi", float32[:, :],),
-    ("eps", float32[:, :],),
-    ("n", float32[:]),
-    ("age_poly", float32[:]),
+    ("psi", float32[:],),
+    ("xi", float32[:],),
+    ("eps", float32[:],),
 ]
 
 
@@ -65,8 +63,6 @@ class Parameters(object):
         psi,
         xi,
         eps,
-        n,
-        age_poly,
     ):
         self.beta = beta
         self.delta = delta
@@ -93,5 +89,3 @@ class Parameters(object):
         self.psi = psi
         self.xi = xi
         self.eps = eps
-        self.n = n
-        self.age_poly = age_poly

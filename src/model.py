@@ -22,15 +22,6 @@ NUMBER_OF_ITERATIONS = 0
 
 class Model():
 
-    def __init__(self, par, education_lvl):
-
-        assert education_lvl in ['<HS', 'HS', 'College']
-        # create consumption preference
-        par.n = create_consumption_preference_array(education_lvl)
-        par.age_poly = create_age_poly_array(education_lvl)
-        #instantiation
-        self.par = par
-
     # For Jeppe
     @staticmethod
     def create_interp(statespace, Vstar):
@@ -39,18 +30,18 @@ class Model():
         """
         return LinearNDInterpolator(statespace, Vstar)
 
-    # @jit(nopython=True)
+    @jit
     def V_integrate(self, choice, state, par, interpolant):
         '''Calculates E_t(V_t+1) via brute force looping'''
 
-        global NUMBER_OF_ITERATIONS
-        NUMBER_OF_ITERATIONS = NUMBER_OF_ITERATIONS + 1
+        # global NUMBER_OF_ITERATIONS
+        # NUMBER_OF_ITERATIONS = NUMBER_OF_ITERATIONS + 1
 
         V_fut = 0.0
         # refactored loop to return a value and weight from gaus_hermite
-        for psi, psi_w in range(1, par.Npsi):
-            for xi, xi_w in range(1, par.Nxi):
-                for eps, eps_w in range(1, par.Neps):
+        for psi, psi_w in par.psi:
+            for xi, xi_w in par.xi:
+                for eps, eps_w in par.eps:
 
                     state = update_f(choice, state, par) # updateting to f_t+1
                     interest_factor = R_tilde(choice, state, par, shock=eps)
@@ -66,31 +57,30 @@ class Model():
 
         return V_fut
 
-    # @jit(nopython=True)
-    def find_V(self, i, kappa, state, interpolant):
+    def find_V(self, i, kappa, state, par, interpolant):
         '''Find optimal c for all states for given choices (i,kappa) in period t'''
 
-        if state.t == self.par.max_age - 1:
-            Vfunc = lambda c: utility(ChoiceTuple(c, kappa, i), state, self.par)
+        if state.t == par.max_age - 1:
+            Vfunc = lambda c: utility(ChoiceTuple(c, kappa, i), state, par)
         else:
-            Vfunc = lambda c: utility(ChoiceTuple(c, kappa, i), state, self.par) + \
-            self.par.beta * self.par.mortality[state.t] * \
-            self.V_integrate(ChoiceTuple(c, kappa, i), state, self.par, interpolant)
+            Vfunc = lambda c: utility(ChoiceTuple(c, kappa, i), state, par) + \
+            par.beta * par.mortality[state.t] * \
+            self.V_integrate(ChoiceTuple(c, kappa, i), state, par, interpolant)
 
         # Optimizer
         # Convert function to negative for minimization
         Vfunc_neg = lambda x: -Vfunc(x)
 
         # c) Find optimum
-        res = minimize_scalar(Vfunc_neg, tol = self.par.tolerance
+        res = minimize_scalar(Vfunc_neg, tol = par.tolerance
                               , bounds = [1, state.m], method = "bounded")
 
         Vstar, Cstar = float(-res.fun), float(res.x)
 
         return Vstar, Cstar
 
-    # @jit(nopython=True)
-    def find_V_for_choices(self, state, interpolant):
+    @jit
+    def find_V_for_choices(self, state, par, interpolant):
         '''Find optimal V for all i, k in period t'''
 
         #initialize V and C
@@ -100,7 +90,7 @@ class Model():
         for i, kappa in choices:
 
             #using notation _V, _C for best V, C for given kappa, i
-            _V, _C = self.find_V(i, kappa, state, interpolant)
+            _V, _C = self.find_V(i, kappa, state, par, interpolant)
             if _V > V:
                 C = _C
 
@@ -117,32 +107,32 @@ class Model():
         """Creates data container for Vstar"""
         return np.empty((statespace.shape[0], 3))
 
-    def initialize_Vstar(self, statespace):
+    def initialize_Vstar(self, statespace, par):
         Vstar = self.create_Vstar(statespace)
         for state_index, s in enumerate(statespace):
-            m, f, p, t = s[0], s[1], s[2], self.par.max_age
+            m, f, p, t = s[0], s[1], s[2], par.max_age
             state, choice = StateTuple(m, f, p, t), ChoiceTuple(m, 0.0, 0.0) #consuming all
-            Vstar[state_index] = utility(choice, state, self.par)
+            Vstar[state_index] = utility(choice, state, par)
         return Vstar
 
-    def initialize_Cstar(self, statespace):
+    def initialize_Cstar(self, statespace, par):
         Cstar = self.create_Cstar(statespace)
         for state_index, s in enumerate(statespace):
-            m, f, p, t = s[0], s[1], s[2], self.par.max_age
+            m, f, p, t = s[0], s[1], s[2], par.max_age
             choice = ChoiceTuple(m, 0.0, 0.0) #consuming all
             Cstar[state_index] = choice
         return Cstar
 
-    # @jit(nopython=True)
-    def solve(self):
+    @jit()
+    def solve(self, par):
         # create state_space grid values. order (m, f, p)
-        statespace = create_statespace(self.par)
+        statespace = create_statespace(par)
 
         V_solution, C_solution = dict(), dict()
 
         # V, C in period T
-        Vstar = self.initialize_Vstar(statespace)
-        Cstar = self.initialize_Cstar(statespace)
+        Vstar = self.initialize_Vstar(statespace, par)
+        Cstar = self.initialize_Cstar(statespace, par)
         # backwards loop:
 
         # 1) (V_star_interpolant) interpolant over næste periode mellem m_grid og v_star_t+1
@@ -155,12 +145,12 @@ class Model():
             interpolant = self.create_interp(statespace, Vstar)
 
             for s_ix, s in enumerate(statespace):
-                print(NUMBER_OF_ITERATIONS)
+                #print(NUMBER_OF_ITERATIONS)
                 if s_ix % 5 == 0:
                     print(s_ix,  'time is: ', datetime.datetime.utcnow())
                 m, f, p = s[0], s[1], s[2]
                 state = StateTuple(m, f, p, t)
-                V, C = self.find_V_for_choices(state, interpolant)
+                V, C = self.find_V_for_choices(state, par, interpolant)
                 Vstar_plus[s_ix], Cstar_plus[s_ix] = V, C
 
             Vstar, Cstar = Vstar_plus, Cstar_plus
