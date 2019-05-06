@@ -30,6 +30,33 @@ class Model():
         """
         return LinearNDInterpolator(statespace, Vstar)
 
+    # @jit
+    # def V_integrate(self, choice, state, par, interpolant):
+    #     '''Calculates E_t(V_t+1) via brute force looping'''
+    #
+    #     # global NUMBER_OF_ITERATIONS
+    #     # NUMBER_OF_ITERATIONS = NUMBER_OF_ITERATIONS + 1
+    #
+    #     V_fut = 0.0
+    #     # refactored loop to return a value and weight from gaus_hermite
+    #     for psi, psi_w in par.psi:
+    #         for xi, xi_w in par.xi:
+    #             for eps, eps_w in par.eps:
+    #
+    #                 state = update_f(choice, state, par) # updateting to f_t+1
+    #                 interest_factor = R_tilde(choice, state, par, shock=eps)
+    #                 assets = calc_a(choice, state, par)
+    #
+    #                 income = xi * (par.G * state.p * psi + par.age_poly[state.t+1] +  par.age_poly[state.t])
+    #
+    #                 integrand = interest_factor * assets + income
+    #
+    #                 V = psi_w * xi_w * eps_w * interpolant((integrand, state.f, state.p)) # GH weighting
+    #
+    #                 V_fut += V
+    #
+    #     return V_fut
+
     @jit
     def V_integrate(self, choice, state, par, interpolant):
         '''Calculates E_t(V_t+1) via brute force looping'''
@@ -38,20 +65,26 @@ class Model():
         # NUMBER_OF_ITERATIONS = NUMBER_OF_ITERATIONS + 1
 
         V_fut = 0.0
+
+        # Calculations that can be moved outside the loop
+        state = update_f(choice, state, par) # updateting to f_t+1
+        assets = calc_a(choice, state, par)
+
         # refactored loop to return a value and weight from gaus_hermite
         for psi, psi_w in par.psi:
             for xi, xi_w in par.xi:
                 for eps, eps_w in par.eps:
 
-                    state = update_f(choice, state, par) # updateting to f_t+1
+                    #state = update_f(choice, state, par) # updateting to f_t+1
                     interest_factor = R_tilde(choice, state, par, shock=eps)
-                    assets = calc_a(choice, state, par)
+                    #assets = calc_a(choice, state, par)
+                    income = xi * (par.G * state.p * psi) + par.age_poly[state.t+1]
 
-                    income = xi * (par.G * state.p * psi + par.age_poly[state.t+1] +  par.age_poly[state.t])
+                    m_fut = interest_factor * assets + income
+                    p_fut = par.G * state.p * psi
+                    f_fut = state.f
 
-                    integrand = interest_factor * assets + income
-
-                    V = psi_w * xi_w * eps_w * interpolant((integrand, state.f, state.p)) # GH weighting
+                    V = psi_w * xi_w * eps_w * interpolant((m_fut, f_fut, p_fut)) # GH weighting
 
                     V_fut += V
 
