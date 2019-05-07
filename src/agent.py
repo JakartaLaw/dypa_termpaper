@@ -32,11 +32,11 @@ def R_tilde(choice, state, par, shock):
 @jit
 def R_riskfree(par):
     # Might be changed don't know if r_min is correct
-    return par.r_min
+    return 1 + par.r_min
 
 @jit
 def R_riskful(state, par, shock):
-    return par.r_min + r(state, par) + shock
+    return np.exp(par.r_min + r(state, par)) * shock
 
 # Return function of financial literacy assumed linear (p. 450)
 
