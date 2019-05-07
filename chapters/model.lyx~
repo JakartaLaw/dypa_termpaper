@@ -725,54 +725,32 @@ Precomputing
 \end_layout
 
 \begin_layout Standard
-Without precomputations, for each period 
+To avoid expensive evaluations of 
+\begin_inset Formula $E_{t}(V_{t+1}(s_{t+1}))$
+\end_inset
+
+ for all possible combinations of the choices made in period 
 \begin_inset Formula $t$
 \end_inset
 
-, we evaluate 
+, we construct a state grid for each period 
+\begin_inset Formula $t$
+\end_inset
+
+ where 
 \begin_inset Formula $E_{t}(V_{t+1}(s_{t+1}))$
 \end_inset
 
- for the number of grid-points in the state space 
-\begin_inset Formula $N_{m}\times N_{p}\times N_{f}$
+ is evaluated for each grid-point.
+ Then, for each choice 
+\begin_inset Formula $(c,i,\kappa)$
 \end_inset
 
-, where 
-\begin_inset Formula $N_{i}$
-\end_inset
-
- is the number of grid-points in state 
-\begin_inset Formula $i$
-\end_inset
-
-, and for all four combinations of discrete choices of 
-\begin_inset Formula $i_{t}$
-\end_inset
-
- and 
-\begin_inset Formula $\kappa_{t}$
-\end_inset
-
-
+, we interpolate the value function, which reduces the number of iterations
+ needed at the minor cost of interpolating.
 \end_layout
 
 \begin_layout Standard
-evaluate 
-\begin_inset Formula $E_{t}(V_{t+1}(s_{t+1}))$
-\end_inset
-
- 
-\begin_inset Formula $N_{m}\times N_{p}\times N_{f}$
-\end_inset
-
- times, where 
-\begin_inset Formula $N_{i}$
-\end_inset
-
- is the number of grid-points in state 
-\begin_inset Formula $i$
-\end_inset
-
 
 \end_layout
 
@@ -791,6 +769,14 @@ Need to change R_tilde to a factor
 
 \begin_layout Itemize
 Need to change V_plus_interp to trilinear
+\end_layout
+
+\begin_layout Itemize
+Set 
+\begin_inset Formula $G=1$
+\end_inset
+
+ to let the permanent income process simply be a random walk.
 \end_layout
 
 \end_deeper

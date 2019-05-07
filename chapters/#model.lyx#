@@ -725,45 +725,29 @@ Precomputing
 \end_layout
 
 \begin_layout Standard
-Without precomputations, for each period 
-\begin_inset Formula $t$
-\end_inset
-
-, we evaluate 
+To avoid expensive evaluations of 
 \begin_inset Formula $E_{t}(V_{t+1}(s_{t+1}))$
 \end_inset
 
- for the number of grid-points in the state space 
-\begin_inset Formula $N_{m}\times N_{p}\times N_{f}$
+ for all possible combinations of the choices made in period 
+\begin_inset Formula $t$
 \end_inset
 
-, where 
-\begin_inset Formula $N_{i}$
+, we construct a state grid for each period 
+\begin_inset Formula $t$
 \end_inset
 
- is the number of grid-points in state 
-\begin_inset Formula $i$
+ where 
+\begin_inset Formula $E_{t}(V_{t+1}(s_{t+1}))$
 \end_inset
 
-, and for all four combinations of discrete choices of 
-\begin_inset Formula $i_{t}$
+ is evaluated for each grid-point.
+ Then, for each choice 
+\begin_inset Formula $(c,i,\kappa)$
 \end_inset
 
- and 
-\begin_inset Formula $\kappa_{t}$
-\end_inset
-
-.
- Each of these evaluation, in turn, requires 
-\begin_inset Formula $8^{3}=512$
-\end_inset
-
- iterations to evaluate the expectation via Gauss-Hermite integration with
- 
-\begin_inset Formula $8$
-\end_inset
-
- nodes on each shock.
+, we interpolate the value function, which reduces the number of iterations
+ needed at the minor cost of interpolating.
 \end_layout
 
 \begin_layout Subsection
