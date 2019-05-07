@@ -24,3 +24,14 @@ def find_V_bruteforce(f_t, m_t, p_t, tr_t, c_t, kappa_t, invest_t, t, par):
 # f_t in [0,100]
 # m_t in [0, 250,000]
 # p_t in [0, X]
+
+# import numpy as np
+# from scipy.interpolate import RegularGridInterpolator
+# def f(x,y,z):
+#     return 2 * x**3 + 3 * y**2 - z
+# x = np.linspace(1, 4, 11)
+# y = np.linspace(4, 7, 22)
+# z = np.linspace(7, 9, 33)
+# data = f(*np.meshgrid(x, y, z, indexing='ij', sparse=True))
+#
+# data

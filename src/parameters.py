@@ -8,10 +8,10 @@ from modules.agepolynomial import create_age_poly_array
 from numba import int32, float32    # import the types
 
 mortality = create_mortality()
-psi = hermgauss_lognorm(n=8, sigma=0.1)
-xi = hermgauss_lognorm(n=8, sigma=0.1)
-eps = hermgauss_lognorm(n=8, sigma=0.1)
-max_age, start_age = 90, 25
+psi = hermgauss_lognorm(n=2, sigma=0.1)
+xi = hermgauss_lognorm(n=2, sigma=0.1)
+eps = hermgauss_lognorm(n=2, sigma=0.1)
+max_age, start_age = 90, 88
 
 age_poly_hs = create_age_poly_array('HS')
 n_hs = create_consumption_preference_array('HS')
