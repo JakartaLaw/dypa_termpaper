@@ -121,7 +121,7 @@ class Model():
             m, f, p, t = s[0], s[1], s[2], par.max_age
             choice = ChoiceTuple(m, 0.0, 0.0) #consuming all
             Cstar[state_index] = choice
-        return Cstar
+        return Csqtar
 
     @jit()
     def solve(self, par):
