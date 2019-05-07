@@ -3,7 +3,7 @@ import numpy as np
 from modules.utils import Struct, hermgauss_lognorm, create_mortality
 
 from numba import jitclass
-from numba import int32, float32  # import the types
+from numba import int32, float32, double  # import the types
 
 spec = [
     ("beta", float32,),

@@ -1,67 +1,74 @@
 import numpy as np
 from copy import copy
-from numba import jit
+from numba import jit, njit
 
 from modules.namedtuples import StateTuple
 
 # Utility function, CRRA with equivalence scale adjuting
 
-@jit
-def utility(choice, state, par):
+@njit
+def utility(c, t, par):
     # not conditioning on education level differences yet
-    u = par.n[state.t] * ( (choice.c/par.n[state.t])**(1-par.rho_u) ) /(1-par.rho_u)
-    return u
+    a1 = par.n[t]
+    #a2 = ( (c/par.n[t])**(1-par.rho_u) )
+    a3 = (c/par.n[t])
+    a4 = (1-par.rho_u)
+    b = (1-par.rho_u)
+    print(a3, a4, a3**a4)
+    return a1 * a3 / b
+
+@njit
+def T_max_utility(m, f, p, t, par):
+    """specifically made for when instantiating V"""
+    return utility(m, t, par)
+
 
 # Updating state variables
-@jit
-def update_f(choice, state, par):
+@njit
+def update_f(i, f, par):
     """for given choice returns new state (with updated f)"""
-    f = (1-par.delta) * state.f + choice.i
-    return StateTuple(f=f, p=state.p, m=state.m, t=state.t)
+    f = (1-par.delta) * f + i
+    return f
 
-@jit
-def calc_a(choice, state, par):
-    return state.m - choice.c - pi(choice) - kappa_cost(choice) + tr(state)
+@njit
+def calc_a(c, i, kappa, m, par):
+    return m - c - pi(i) - kappa_cost(kappa) + tr()
 
 # Evolution of asset
 ## Remember to add stochastic element to the return factor evolution, p. 446
-@jit
-def R_tilde(choice, state, par, shock):
-    return (1-choice.kappa)*R_riskfree(par) + choice.kappa*R_riskful(state, par, shock)
+@njit
+def R_tilde(kappa, f, par, shock):
+    return (1-kappa)*R_riskfree(par) + kappa*R_riskful(f, par, shock)
 
-@jit
+@njit
 def R_riskfree(par):
     # Might be changed don't know if r_min is correct
     return 1 + par.r_min
 
-@jit
-def R_riskful(state, par, shock):
-    return np.exp(par.r_min + r(state, par)) * shock
+@njit
+def R_riskful(f, par, shock):
+    return np.exp(par.r_min + r(f, par)) * shock
 
 # Return function of financial literacy assumed linear (p. 450)
-
-@jit
-def r(state, par):
+@njit
+def r(f, par):
     # Calculate slope
     slope = (par.r_max - par.r_min)/(par.f_max - par.f_min)
-    return par.r_min + slope * state.f
+    return par.r_min + slope * f
 
 # Government transfer
-
-@jit
-def tr(state):
+@njit
+def tr():
     return 0
     #return max(par.cmin - x, 0)
 
 # Cost function for financial knowledge (p. 451, bottom). Combining both fixed and variable
-
-@jit
-def pi(choice):
+@njit
+def pi(i):
     # constants are derived from the paper
-    return 50*(choice.i**1.75)
+    return 50*(i**1.75)
 
-
-@jit
-def kappa_cost(choice):
+@njit
+def kappa_cost(kappa):
     # constants are derived from the paper
-    return 750 * (choice.kappa > 0)
+    return 750 * (kappa > 0)

@@ -1,26 +1,28 @@
 import pytest
-import numpy as np
+from agent import utility, update_f, calc_a, R_tilde, T_max_utility
+from parameters import parameters
 
-from agent import Agent
-from parameters import parameters as par
-from modules.utils import Struct
+@pytest.fixture
+def par():
+    return parameters
 
-state = Struct()
-
-def test_can_call_agent():
-    Agent(par=par, state=state, education_lvl='HS')
-
-# ma an instantiated agent
-def test_utility_func1(ma):
-    u = ma.utility(c=10000, t=50)
-    assert u != np.nan
-
-def test_utility_func1(ma):
-    print(ma.par.n[90])
-    u = ma.utility(c=10000, t=90)
+def test_utility(par):
+    u = utility(4, 4, par)
     print(u)
-    assert u != np.nan
 
-@pytest.mark.skip
-def test_should_fail():
-    assert 'foo' == 'bar'
+def test_update_f(par):
+    f = update_f(1, 14, par)
+    print(f)
+
+def test_calc_a(par):
+    a = calc_a(1, 2, 3, 4, par)
+    print(a)
+
+def test_calc_R_tilde(par):
+    r = R_tilde(0.55, 27, par, 2)
+    print(r)
+
+def test_t_max_utility(par):
+    res1 = utility(4, 4, par)
+    res2 = T_max_utility(4, 4, 4, 4, par)
+    assert res1==res2

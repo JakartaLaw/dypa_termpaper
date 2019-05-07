@@ -9,7 +9,7 @@ import datetime
 from agent import utility, update_f, calc_a, R_tilde
 from parameters import parameters as par
 from modules.utils import hermgauss_lognorm, Struct
-from modules.stategrid import create_statespace
+from modules.stategrid import create_grids
 from modules.namedtuples import StateTuple, ChoiceTuple
 from modules.consumptionpreference import create_consumption_preference_array
 from modules.agepolynomial import create_age_poly_array
@@ -18,15 +18,14 @@ from modules.agepolynomial import create_age_poly_array
 
 from numba import jit
 
-NUMBER_OF_ITERATIONS = 0
-
 class Model():
 
     @staticmethod
-    def create_interp(statespace, Vstar):
+    def create_interp(m_grid, f_grid, p_grid, Vstar):
         """Returns function which interpolates.
         The order is: (m, f, p)
         """
+        np.meshgrid()
         return LinearNDInterpolator(statespace, Vstar)
 
     @jit
@@ -47,9 +46,7 @@ class Model():
             for xi, xi_w in par.xi:
                 for eps, eps_w in par.eps:
 
-                    #state = update_f(choice, state, par) # updateting to f_t+1
                     interest_factor = R_tilde(choice, state, par, shock=eps)
-                    #assets = calc_a(choice, state, par)
                     income = xi * (par.G * state.p * psi) + par.age_poly[state.t+1]
 
                     # Future state values
@@ -116,7 +113,7 @@ class Model():
         """Creates data container for Vstar"""
         return np.empty((statespace.shape[0], 3))
 
-    def initialize_Vstar(self, statespace, par):
+    def initialize_Vstar(self, m_grid, f_grid, p_grid, par):
         '''Only applicable for final period T'''
         Vstar = self.create_Vstar(statespace)
         for state_index, s in enumerate(statespace):

@@ -15,6 +15,16 @@ def create_p_grid(par):
     grid_p = np.linspace(par.p_min, par.p_max, par.Np)
     return grid_p
 
+
+def create_grids(par):
+    """Returns (m_grid, f_grid, p_grid)
+    """
+    m_grid = create_m_grid(par)
+    f_grid = create_f_grid(par)
+    p_grid = create_p_grid(par)
+
+    return m_grid, f_grid, p_grid
+
 def create_statespace(par):
     '''grid over m, f, p'''
 
