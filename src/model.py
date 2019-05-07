@@ -132,9 +132,8 @@ class Model():
             m, f, p, t = s[0], s[1], s[2], par.max_age
             choice = ChoiceTuple(m, 0.0, 0.0) #consuming all
             Cstar[state_index] = choice
-        return Csqtar
+        return Cstar
 
-    @jit()
     def solve(self, par):
         # create state_space grid values. order (m, f, p)
         statespace = create_statespace(par)
@@ -169,4 +168,3 @@ class Model():
             V_solution[t], C_solution[t] = Vstar, Cstar
 
         return V_solution, C_solution
-#%%
