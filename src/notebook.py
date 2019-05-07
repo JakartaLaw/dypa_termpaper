@@ -15,3 +15,4 @@ V_sol, C_sol = m.solve(par)
 
 
 V_sol[88]
+C_sol[87]

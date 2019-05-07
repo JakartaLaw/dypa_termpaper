@@ -130,8 +130,75 @@ Introduction
 
 \begin_layout Standard
 What explains wealth inequality between socioeconomic groups at retirement?
- While differences in earnings over the life-time accounts for a large share
- of the differences in wealth, it does not explain
+ While differences in earnings and their subsequent accumulated returns
+ over the life-time can account for a large share of the differences in
+ wealth in a simple life cycle model, it can not explain the differences
+ in ratios of income and wealth 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+citep{hubbard1995precautionary}
+\end_layout
+
+\end_inset
+
+.
+ Employing a model with a mechanism where financial knowledge enables individual
+s to better allocate resources over their lifetimes with stochastic returns
+ and earnings, 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+cite{lusardi2017optimal}
+\end_layout
+
+\end_inset
+
+ estimate that staggering 
+\begin_inset Formula $30-40\%$
+\end_inset
+
+ of retirement wealth inequality between education groups can be accounted
+ for by this simple mechanism.
+ The idea is that because higher income and education groups are linked
+ together, the net returns to investing time, money and effort in allocating
+ one's ressources to the best risk-adjusted returns is higher for higher
+ education groups.
+ This, in turn, amplifies the differences in wealth accummulation as lower
+ education groups can not profitably escape a low-return world because it
+ is not optimal for them to invest in financial knowledge.
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+hspace{4mm}
+\end_layout
+
+\end_inset
+
+This mechanism is interesting, but the estimated effect of 
+\begin_inset Formula $30-40\%$
+\end_inset
+
+ is very large and likely vulnerable to changes in model assumptions, which
+ this paper will investigate.
+ What happens when we change the cost function on acquiring financial knowledge?
+ What happens...
 \end_layout
 
 \begin_layout Section
@@ -157,8 +224,95 @@ cite{lusardi2017optimal}
 \end_inset
 
  is reformulated to incorporate some dynamic elements from the Deaton-Caroll
- Buffer-stock model that allows for feasible tracking of permanent income.
- Let the state space be given by 
+ Buffer-stock model that allows for feasible tracking of permanent income,
+ and we abstract from medical-related expenditures (
+\begin_inset Formula $\text{oop}_{e,t}$
+\end_inset
+
+ in the original model)
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+hspace{4mm}
+\end_layout
+
+\end_inset
+
+We model agents from age 
+\begin_inset Formula $t_{min}=25$
+\end_inset
+
+ to age 
+\begin_inset Formula $T=90$
+\end_inset
+
+ that have an exogenously given education level 
+\begin_inset Formula $e\in\{\text{Less than highschool, High school, College+}\}$
+\end_inset
+
+, which determines diffences in mortality rates 
+\begin_inset Formula $\rho_{e,t}$
+\end_inset
+
+, household utility functions 
+\begin_inset Formula $n_{e,t}u(c_{t}/n_{e,t})$
+\end_inset
+
+ and a deterministically given income path 
+\begin_inset Formula $g_{e}(t)$
+\end_inset
+
+ that are all known to the agent.
+ Similar to the Deaton-Caroll Buffer-stock model, each agent has a stochastic
+ permanent income process 
+\begin_inset Formula $p_{t}$
+\end_inset
+
+ that together with the income parth determines the income for agents, but
+ the accummulation of assets are now also determined by an endogenous return
+ 
+\begin_inset Formula $\bar{R}_{\kappa}(f_{t+1})$
+\end_inset
+
+ that is a function of an endogenously determined financial literacy 
+\begin_inset Formula $f_{t+1}(i_{t},f_{t})$
+\end_inset
+
+ and the shares invested in a risky asset 
+\begin_inset Formula $\kappa$
+\end_inset
+
+, where 
+\begin_inset Formula $i_{t}\in\{0,1\}$
+\end_inset
+
+ is a dummy for whether the agent chooses to invest or not in financial
+ literacy in period 
+\begin_inset Formula $t$
+\end_inset
+
+.
+ Broadly speaking, financial literacy can be thought of as an acquisition
+ of particular skills and having information and awareness of financial
+ products.
+ Over a lifetime, agents therefore choose in each period 
+\begin_inset Formula $t$
+\end_inset
+
+ how much to consume, whether to invest in financial literacy or not, and
+ how much to invest in a risky asset so as to maximize the sum of discounted
+ utilities.
+ Formally, let the state space be given by 
+\end_layout
+
+\begin_layout Standard
 \begin_inset Formula 
 \[
 s_{t}=(m_{t},p_{t},f_{t},e)
@@ -206,41 +360,151 @@ cite{lusardi2017optimal}
  the education level.
  Then, the value function can be represented in recursive form as 
 \begin_inset Formula 
-\[
-V_{t}(s_{t})=\underset{c_{t},i_{t},\kappa_{t}}{\max}n_{e,t}u(c_{t}/n_{e,t})+\beta\rho_{e,t}E_{t}[V_{t+1}(s_{t+1})]
-\]
+\begin{equation}
+V_{t}(s_{t})=\underset{c_{t},i_{t},\kappa_{t}}{\max}n_{e,t}u(c_{t}/n_{e,t})+\beta\rho_{e,t}E_{t}[V_{t+1}(s_{t+1})]\label{eq:value_func}
+\end{equation}
 
 \end_inset
 
 such that
 \begin_inset Formula 
-\begin{alignat*}{1}
-a_{t} & =m_{t}+tr_{t}-c_{t}-\pi(i_{t})-c_{d}I(\kappa_{t}>0)\\
-m_{t+1} & =\tilde{R}_{\kappa}(f_{t+1})a_{t}+Y_{t+1}\\
-Y_{t+1} & =\xi_{t+1}p_{t+1}g_{y,e}(t+1)\\
-p_{t+1} & =Gp_{t}\psi_{t+1}\\
-f_{t+1} & =(1-\delta)f_{t}+i_{t}\\
-\tilde{R}_{\kappa}(f_{t+1}) & =(1-\kappa_{t})\bar{R}+\kappa_{t}\tilde{R}(f_{t+1})\\
-\log\tilde{R}(f_{t+1}) & =\bar{r}+r(f_{t})+\tilde{\epsilon}_{t},\tilde{\epsilon}_{t}\sim N(0,\sigma_{\epsilon}^{2})\Rightarrow\\
-\tilde{R}(f_{t+1}) & =\exp\left(\bar{r}+r(f_{t})\right)\exp(\tilde{\epsilon}_{t})=\exp\left(\bar{r}+r(f_{t})\right)\epsilon_{t}\\
-tr_{t} & =\max(c_{\min}-m_{t},0)
-\end{alignat*}
+\begin{alignat}{1}
+a_{t} & =m_{t}+tr_{t}-c_{t}-\pi(i_{t})-c_{d}I(\kappa_{t}>0)\label{eq:asset_acc}\\
+m_{t+1} & =\tilde{R}_{\kappa}(f_{t+1})a_{t}+Y_{t+1}\label{eq:cash_on_hand}\\
+Y_{t+1} & =\xi_{t+1}p_{t+1}+g_{y,e}(t+1),\:\log(\xi_{t+1})\sim N(0,\sigma_{\xi}^{2})\label{eq:income_process}\\
+p_{t+1} & =Gp_{t}\psi_{t+1},\:\log(\psi_{t+1})\sim N(0,\sigma_{\psi}^{2})\label{eq:perm_income}\\
+f_{t+1} & =(1-\delta)f_{t}+i_{t}\label{eq:fin_lit}\\
+\tilde{R}_{\kappa}(f_{t+1}) & =(1-\kappa_{t})\bar{R}+\kappa_{t}\tilde{R}(f_{t+1})\label{eq:return}\\
+\log\tilde{R}(f_{t+1}) & =\bar{r}+r(f_{t})+\tilde{\epsilon}_{t},\tilde{\epsilon}_{t}\sim N(0,\sigma_{\epsilon}^{2})\Rightarrow\nonumber \\
+\tilde{R}(f_{t+1}) & =\exp\left(\bar{r}+r(f_{t})\right)\exp(\tilde{\epsilon}_{t})=\exp\left(\bar{r}+r(f_{t})\right)\epsilon_{t},\:\log(\epsilon_{t})\sim N(0,\sigma_{\epsilon}^{2})\label{eq:stoch_return}\\
+tr_{t} & =\max(c_{\min}-m_{t},0)\label{eq:transfers}
+\end{alignat}
 
 \end_inset
 
 where 
-\begin_inset Formula $\psi_{t}$
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:asset_acc"
+
 \end_inset
 
-, 
-\begin_inset Formula $\xi_{t}$
+ is the accummulation of assets, where 
+\begin_inset Formula $m_{t}$
 \end_inset
 
-, 
-\begin_inset Formula $\epsilon_{t}$
+ is cash-on-hand, 
+\begin_inset Formula $tr_{t}$
 \end_inset
 
- are log-normally distributed 
+ government transfers that ensures a minimum income level (see 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:transfers"
+
+\end_inset
+
+), 
+\begin_inset Formula $c_{t}$
+\end_inset
+
+ consumption, 
+\begin_inset Formula $\pi(i_{t})$
+\end_inset
+
+ the cost of investing in financial literacy and 
+\begin_inset Formula $c_{d}$
+\end_inset
+
+ the fixed cost of placing funds in a risky asset.
+ 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:cash_on_hand"
+
+\end_inset
+
+ describes the next-period cash-on-hand, where 
+\begin_inset Formula $\tilde{R}_{\kappa}(f_{t+1})$
+\end_inset
+
+ is the endogenous return function and 
+\begin_inset Formula $Y_{t+1}$
+\end_inset
+
+ is next-period income.
+ 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:income_process"
+
+\end_inset
+
+ describes the income process as a function of both permanent income and
+ an age polynomial for the given education group.
+ 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:perm_income"
+
+\end_inset
+
+ describes the permanent income process, where 
+\begin_inset Formula $G$
+\end_inset
+
+ is an underlying growth rate.
+ 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:fin_lit"
+
+\end_inset
+
+ describes the evolution of financial literacy, where 
+\begin_inset Formula $\delta$
+\end_inset
+
+ is the depreciation rate.
+ 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:return"
+
+\end_inset
+
+ gives the return on assets in period 
+\begin_inset Formula $t$
+\end_inset
+
+, which is a weighted sum of risk-free return factor 
+\begin_inset Formula $\bar{R}$
+\end_inset
+
+ and stochastic (stocks) return 
+\begin_inset Formula $\tilde{R}(f_{t+1})$
+\end_inset
+
+, which is function in 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:stoch_return"
+
+\end_inset
+
+ of the risk-free rate 
+\begin_inset Formula $\bar{r}$
+\end_inset
+
+ and of 
+\begin_inset Formula $r(f_{t})$
+\end_inset
+
+ where 
+\begin_inset Formula $r'(f_{t})>0$
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Standard
@@ -256,7 +520,8 @@ hspace{4mm}
 
 \end_inset
 
-We discretize some of the choice space with 
+We depart from the original implementation and discretize part of the choice
+ space with 
 \begin_inset Formula $\kappa_{t}\in\{0,0.55\}$
 \end_inset
 
@@ -278,17 +543,46 @@ We discretize some of the choice space with
 \end_inset
 
 ).
- The growth factor 
-\begin_inset Formula $G$
+ The choice of the two possible states of 
+\begin_inset Formula $\kappa$
 \end_inset
 
- is assumed to be 
-\begin_inset Formula $1.03$
+ is motivated by Table 2 (p.
+ 453) in 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+cite{lusardi2017optimal}
+\end_layout
+
+\end_inset
+
+, where the observed share 
+\begin_inset Formula $E(\kappa_{t}\mid\kappa_{t}>0)$
+\end_inset
+
+ is around 
+\begin_inset Formula $55\%$
+\end_inset
+
+ across education groups, whereas their model predicts shares around 
+\begin_inset Formula $97\%$
 \end_inset
 
 .
- Modelling-wise, it is also only feasible to invest in the technology 
-\begin_inset Formula $i_{t}$
+ Thus, not only will our implementation reduce the choice space for 
+\begin_inset Formula $\kappa$
+\end_inset
+
+, it can possibly also aid in a better fit to the data, as the original
+ model clearly overshoots the amount people invest in risky assets.
+ Finally, we follow the original paper where it is only feasible to invest
+ in the technology 
+\begin_inset Formula $\kappa_{t}>0$
 \end_inset
 
  if 
@@ -296,7 +590,7 @@ We discretize some of the choice space with
 \end_inset
 
 , i.e.
- the government won't pay for investing in the technology.
+ the government won't pay for obtaining the technology.
 \end_layout
 
 \begin_layout Subsection
@@ -349,11 +643,11 @@ E_{t}(V_{t+1}(m_{t+1},p_{t+1},f_{t+1}))=\sum_{j=1}^{8}w_{j}^{\psi}\sum_{i=1}^{8}
 where cash-on-hand is given by
 \begin_inset Formula 
 \begin{multline*}
-m_{t+1}^{jik}=\tilde{R}_{\kappa}(f_{t+1})a_{t}+Y_{t+1}=\tilde{R}_{\kappa}(f_{t+1})a_{t}+\left(\xi_{t+1}^{i}\left[Gp_{y,t}\psi_{t+1}^{j}\right]g_{y,e}(t+1)\right)=\\
-\left\{ (1-\kappa_{t})\bar{R}+\kappa_{t}\tilde{R}((1-\delta)f_{t}+i_{t})\right\} a_{t}+\left(\xi_{t+1}^{i}\left[Gp_{y,t}\psi_{t+1}^{j}\right]g_{y,e}(t+1)\right)=\\
-\left\{ (1-\kappa_{t})\bar{R}+\kappa_{t}\exp\left(\bar{r}+r\left((1-\delta)f_{t}+i_{t}\right)\right)\epsilon_{t}^{k}\right\} a_{t}+\left(\xi_{t+1}^{i}\left[Gp_{y,t}\psi_{t+1}^{j}\right]g_{y,e}(t+1)\right)\Leftrightarrow\\
+m_{t+1}^{jik}=\tilde{R}_{\kappa}(f_{t+1})a_{t}+Y_{t+1}=\tilde{R}_{\kappa}(f_{t+1})a_{t}+\left(\xi_{t+1}^{i}\left[Gp_{y,t}\psi_{t+1}^{j}\right]+g_{y,e}(t+1)\right)=\\
+\left\{ (1-\kappa_{t})\bar{R}+\kappa_{t}\tilde{R}((1-\delta)f_{t}+i_{t})\right\} a_{t}+\left(\xi_{t+1}^{i}\left[Gp_{y,t}\psi_{t+1}^{j}\right]+g_{y,e}(t+1)\right)=\\
+\left\{ (1-\kappa_{t})\bar{R}+\kappa_{t}\exp\left(\bar{r}+r\left((1-\delta)f_{t}+i_{t}\right)\right)\epsilon_{t}^{k}\right\} a_{t}+\left(\xi_{t+1}^{i}\left[Gp_{y,t}\psi_{t+1}^{j}\right]+g_{y,e}(t+1)\right)\Leftrightarrow\\
 m_{t+1}^{jik}=\left\{ (1-\kappa_{t})\bar{R}+\kappa_{t}\exp\left(\bar{r}+r\left((1-\delta)f_{t}+i_{t}\right)\right)\epsilon_{t}^{k}\right\} \left[m_{t}+tr_{t}-c_{t}-\pi(i_{t})-c_{d}I(\kappa_{t}>0)\right]+\\
-\left(\xi_{t+1}^{i}\left[Gp_{y,t}\psi_{t+1}^{j}\right]g_{y,e}(t+1)\right)
+\left(\xi_{t+1}^{i}\left[Gp_{y,t}\psi_{t+1}^{j}\right]+g_{y,e}(t+1)\right)
 \end{multline*}
 
 \end_inset
@@ -423,6 +717,56 @@ We solve the model for the three different types of education group agents
 \end_layout
 
 \begin_layout Subsection
+Precomputing 
+\begin_inset Formula $E_{t}(V_{t+1}(s_{t+1}))$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Without precomputations, for each period 
+\begin_inset Formula $t$
+\end_inset
+
+, we evaluate 
+\begin_inset Formula $E_{t}(V_{t+1}(s_{t+1}))$
+\end_inset
+
+ for the number of grid-points in the state space 
+\begin_inset Formula $N_{m}\times N_{p}\times N_{f}$
+\end_inset
+
+, where 
+\begin_inset Formula $N_{i}$
+\end_inset
+
+ is the number of grid-points in state 
+\begin_inset Formula $i$
+\end_inset
+
+, and for all four combinations of discrete choices of 
+\begin_inset Formula $i_{t}$
+\end_inset
+
+ and 
+\begin_inset Formula $\kappa_{t}$
+\end_inset
+
+.
+ Each of these evaluation, in turn, requires 
+\begin_inset Formula $8^{3}=512$
+\end_inset
+
+ iterations to evaluate the expectation via Gauss-Hermite integration with
+ 
+\begin_inset Formula $8$
+\end_inset
+
+ nodes on each shock.
+\end_layout
+
+\begin_layout Subsection
 Notes
 \end_layout
 
@@ -437,6 +781,14 @@ Need to change R_tilde to a factor
 
 \begin_layout Itemize
 Need to change V_plus_interp to trilinear
+\end_layout
+
+\begin_layout Itemize
+Set 
+\begin_inset Formula $G=1$
+\end_inset
+
+ to let the permanent income process simply be a random walk.
 \end_layout
 
 \end_deeper

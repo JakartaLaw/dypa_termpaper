@@ -56,8 +56,9 @@ class Model():
                     m_fut = interest_factor * assets + income
                     p_fut = par.G * state.p * psi
                     f_fut = state.f
+                    s_fut = (m_fut, f_fut, p_fut)
 
-                    V = psi_w * xi_w * eps_w * interpolant((m_fut, f_fut, p_fut)) # GH weighting
+                    V = psi_w * xi_w * eps_w * interpolant(s_fut) # GH weighting
 
                     V_fut += V
 
@@ -97,14 +98,13 @@ class Model():
 
             #using notation _V, _C for best V, C for given kappa, i
             _V, _C = self.find_V(i, kappa, state, par, interpolant)
-            if np.isnan(_V) == True:
-                print(ChoiceTuple(_C, kappa, i))
+            # if np.isnan(_V) == True:
+            #     print(ChoiceTuple(_C, kappa, i))
 
             if _V > V:
                 C, V = ChoiceTuple(_C, kappa, i), _V
 
         return V, C
-
 
     @staticmethod
     def create_Vstar(statespace):
@@ -150,8 +150,6 @@ class Model():
         # 1) (V_star_interpolant) interpolant over næste periode mellem m_grid og v_star_t+1
         for t in reversed(range(par.start_age, par.max_age)):
             #print('Solution at time step t: ', t, ', time is: ', datetime.datetime.utcnow())
-
-            V_solution[t], C_solution[t] = Vstar, Cstar
 
             Vstar_plus, Cstar_plus = self.create_Vstar(statespace), self.create_Cstar(statespace)
             interpolant = self.create_interp(statespace, Vstar)
