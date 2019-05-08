@@ -1,21 +1,15 @@
 import numpy as np
 from copy import copy
 from numba import jit, njit
-
-from modules.namedtuples import StateTuple
+from numba.types import float64, int64
 
 # Utility function, CRRA with equivalence scale adjuting
 
+#@njit(int64(float64,int64,double[:],double))
 @njit
 def utility(c, t, par):
     # not conditioning on education level differences yet
-    a1 = par.n[t]
-    #a2 = ( (c/par.n[t])**(1-par.rho_u) )
-    a3 = (c/par.n[t])
-    a4 = (1-par.rho_u)
-    b = (1-par.rho_u)
-    print(a3, a4, a3**a4)
-    return a1 * a3 / b
+    return par.n[t] * ( (c/par.n[t])**(1-par.rho_u) ) /  (1-par.rho_u)
 
 @njit
 def T_max_utility(m, f, p, t, par):

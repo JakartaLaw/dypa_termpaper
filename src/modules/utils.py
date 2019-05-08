@@ -25,7 +25,7 @@ def hermgauss_lognorm(n, sigma):
     x = np.exp(x*np.sqrt(2)*sigma-0.5*sigma**2);
     w = w/np.sqrt(np.pi);
 
-    return np.array((x, w), dtype=np.float32).T
+    return np.array((x, w)).T
 
 def create_mortality():
     # Mortality from http://www.bandolier.org.uk/booth/Risk/dyingage.html
@@ -39,4 +39,4 @@ def create_mortality():
     mort_75 = 1/((15+21+6+7)/4) * np.ones(15)
 
     mort = np.append(mort_0_14, np.append(mort_15_24, np.append(mort_25_34, np.append(mort_35_44, np.append(mort_45_54, np.append(mort_55_64, np.append(mort_65_74, mort_75)))))))
-    return np.array(mort, dtype=np.float32)
+    return np.array(mort)
