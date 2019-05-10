@@ -167,4 +167,20 @@ class Model():
             V_solution[t], C_solution[t] = Vstar, Cstar
 
         return V_solution, C_solution
-#%%
+# %%
+
+def pre_compute_Vfut():
+    for s_ix, s in enumerate(statespace): # Run thru state space
+        m, f, p = s[0], s[1], s[2]
+
+        # Calculate integral where m_fut = m etc.
+
+
+        # Return V(m,f,p) for each grid point
+
+        # Return interpolant
+    pass
+
+
+
+# %%

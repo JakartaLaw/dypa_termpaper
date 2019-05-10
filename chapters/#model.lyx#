@@ -26,6 +26,16 @@
 
 \usepackage{algorithm}
 \usepackage{algorithmic}
+
+
+\newlength\myindent
+\setlength\myindent{2em}
+\newcommand\bindent{%
+  \begingroup
+  \setlength{\itemindent}{\myindent}
+  \addtolength{\algorithmicindent}{\myindent}
+}
+\newcommand\eindent{\endgroup}
 \end_preamble
 \use_default_options true
 \begin_modules
@@ -634,9 +644,9 @@ n of the state space
 
 \begin_layout Standard
 \begin_inset Formula 
-\[
-E_{t}(V_{t+1}(m_{t+1},p_{t+1},f_{t+1}))=\sum_{j=1}^{8}w_{j}^{\psi}\sum_{i=1}^{8}w_{i}^{\xi}\sum_{k=1}^{8}w_{k}^{\epsilon}V_{t+1}\left(m_{t+1}^{jik},p_{t+1}^{j},f_{t+1}\right)
-\]
+\begin{equation}
+E_{t}(V_{t+1}(m_{t+1},p_{t+1},f_{t+1}))=\sum_{j=1}^{8}w_{j}^{\psi}\sum_{i=1}^{8}w_{i}^{\xi}\sum_{k=1}^{8}w_{k}^{\epsilon}V_{t+1}\left(m_{t+1}^{jik},p_{t+1}^{j},f_{t+1}\right)\label{eq:GH_integration}
+\end{equation}
 
 \end_inset
 
@@ -716,6 +726,13 @@ We solve the model for the three different types of education group agents
  interpolation of the value function array.
 \end_layout
 
+\begin_layout Standard
+\begin_inset Formula $\{\tilde{s}\}_{i,j,k}^{I,J,K}$
+\end_inset
+
+
+\end_layout
+
 \begin_layout Subsection
 Precomputing 
 \begin_inset Formula $E_{t}(V_{t+1}(s_{t+1}))$
@@ -729,29 +746,207 @@ To avoid expensive evaluations of
 \begin_inset Formula $E_{t}(V_{t+1}(s_{t+1}))$
 \end_inset
 
- for all possible combinations of the choices made in period 
+ for all possible combinations of states and choices made in period 
 \begin_inset Formula $t$
 \end_inset
 
-, we construct a state grid for each period 
-\begin_inset Formula $t$
+, we construct a state grid of the post-decision states
+\begin_inset Formula 
+\[
+\tilde{s}=(a_{t},p_{t+1},f_{t+1})
+\]
+
 \end_inset
 
- where 
-\begin_inset Formula $E_{t}(V_{t+1}(s_{t+1}))$
+where 
+\begin_inset Formula $f_{t+1}=(1-\delta)f_{t}+i_{t}$
 \end_inset
 
- is evaluated for each grid-point.
- Then, for each choice 
-\begin_inset Formula $(c,i,\kappa)$
+, 
+\begin_inset Formula $a_{t}=m_{t}+tr_{t}-c_{t}-\pi(i_{t})-c_{d}I(\kappa_{t}>0)$
 \end_inset
 
-, we interpolate the value function, which reduces the number of iterations
- needed at the minor cost of interpolating.
+ and 
+\begin_inset Formula $p_{t+1}=Gp_{t}$
+\end_inset
+
+, which we map into 
+\begin_inset Formula $E_{t}\left(V_{t+1}\left[\tilde{R}_{\kappa}(f_{t+1})a_{t}+Y_{t+1},p_{t+1},f_{t+1}\right]\right)$
+\end_inset
+
+.
+ Then, for each point in the state and choice space, we interpolate the
+ expectation of the next-period value function, which reduces the amount
+ of Gauss-Hermite integrations needed.
+ The process is described in Algorithm 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+ref{alg:precomp}
+\end_layout
+
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{algorithm}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+caption{Precomputations}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+label{alg:precomp}
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+textbf{Initialize grid and precompute.} Let $ 
+\backslash
+{
+\backslash
+tilde{s}
+\backslash
+}_{i,j,k}^{I,J,K} $ be the post-decision state grid.
+ Use Eq.
+ (
+\backslash
+ref{eq:GH_integration}) to map this grid into $ E_{t}
+\backslash
+left(V_{t+1}
+\backslash
+left[
+\backslash
+tilde{R}_{
+\backslash
+kappa}(f_{t+1})a_{t}+Y_{t+1},p_{t+1},f_{t+1}
+\backslash
+right]
+\backslash
+right)$, and then create a trilinear interpolant.
+ 
+\backslash
+
+\backslash
+ 
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{algorithmic} 
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+	
+\backslash
+STATE 
+\backslash
+textbf{Calculate next-period expected value:} 
+\backslash
+vspace{4mm}
+\end_layout
+
+\begin_layout Plain Layout
+
+	
+\backslash
+bindent
+\end_layout
+
+\begin_layout Plain Layout
+
+		
+\backslash
+STATE For all $s$ in statespace:
+\end_layout
+
+\begin_layout Plain Layout
+
+		
+\backslash
+STATE 
+\backslash
+hskip1.5em for all
+\end_layout
+
+\begin_layout Plain Layout
+
+	
+\backslash
+eindent
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{algorithmic}
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{algorithm}
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Subsection
-Notes
+Notes 
 \end_layout
 
 \begin_layout Itemize

@@ -19,19 +19,56 @@ def find_V_bruteforce(f_t, m_t, p_t, tr_t, c_t, kappa_t, invest_t, t, par):
     return(V_fut)
 
 
-# Pre-compute integral for each state (to avoid looping 8^3 times for each grid in state space and choice)
+def V_integrate(self, choice, state, par, interpolant):
+    '''Calculates E_t(V_t+1) via brute force looping'''
 
-# f_t in [0,100]
-# m_t in [0, 250,000]
-# p_t in [0, X]
+    # global NUMBER_OF_ITERATIONS
+    # NUMBER_OF_ITERATIONS = NUMBER_OF_ITERATIONS + 1
 
-# import numpy as np
-# from scipy.interpolate import RegularGridInterpolator
-# def f(x,y,z):
-#     return 2 * x**3 + 3 * y**2 - z
-# x = np.linspace(1, 4, 11)
-# y = np.linspace(4, 7, 22)
-# z = np.linspace(7, 9, 33)
-# data = f(*np.meshgrid(x, y, z, indexing='ij', sparse=True))
-#
-# data
+    V_fut = 0.0
+
+    # Calculations that can be moved outside the loop
+    state = update_f(choice, state, par) # updateting to f_t+1
+    assets = calc_a(choice, state, par)
+
+    # refactored loop to return a value and weight from gaus_hermite
+    for psi, psi_w in par.psi:
+        for xi, xi_w in par.xi:
+            for eps, eps_w in par.eps:
+
+                #state = update_f(choice, state, par) # updateting to f_t+1
+                interest_factor = R_tilde(choice, state, par, shock=eps)
+                #assets = calc_a(choice, state, par)
+                income = xi * (par.G * state.p * psi) + par.age_poly[state.t+1]
+
+                # Future state values
+                m_fut = interest_factor * assets + income
+                p_fut = par.G * state.p * psi
+                f_fut = state.f
+                s_fut = (m_fut, f_fut, p_fut)
+
+                V = psi_w * xi_w * eps_w * interpolant(s_fut) # GH weighting
+
+                V_fut += V
+
+    return V_fut
+
+
+def pre_compute_Vfut(t,):
+    for s_ix, s in enumerate(statespace): # Run thru post-decision grid (same as standard grid)
+        int_fact_x_assets, f_fut, p = s[0], s[1], s[2]
+
+        # Calculate integral
+        for psi, psi_w in par.psi:
+            for xi, xi_w in par.xi:
+                for eps, eps_w in par.eps:
+
+                    income = xi * (par.G * state.p * psi) + par.age_poly[t+1]
+
+
+
+
+
+        # Return V(m,f,p) for each grid point
+
+        # Return interpolant
