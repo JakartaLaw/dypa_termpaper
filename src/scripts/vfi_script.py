@@ -56,14 +56,15 @@ def V_integrate(self, choice, state, par, interpolant):
 
 def pre_compute_Vfut(t,):
     for s_ix, s in enumerate(statespace): # Run thru post-decision grid (same as standard grid)
-        int_fact_x_assets, f_fut, p = s[0], s[1], s[2]
+        assets, f_fut, p = s[0], s[1], s[2]
 
         # Calculate integral
         for psi, psi_w in par.psi:
             for xi, xi_w in par.xi:
                 for eps, eps_w in par.eps:
 
-                    income = xi * (par.G * state.p * psi) + par.age_poly[t+1]
+                    income = xi * (par.G * p * psi) + par.age_poly[t+1]
+                    interest_factor = R_tilde(choice, state, par, shock=eps)
 
 
 

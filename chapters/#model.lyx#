@@ -239,7 +239,7 @@ cite{lusardi2017optimal}
 \begin_inset Formula $\text{oop}_{e,t}$
 \end_inset
 
- in the original model)
+ in the original model).
 \end_layout
 
 \begin_layout Standard
@@ -399,11 +399,11 @@ reference "eq:asset_acc"
 
 \end_inset
 
- is the accummulation of assets, where 
+ is the accummulation of assets with 
 \begin_inset Formula $m_{t}$
 \end_inset
 
- is cash-on-hand, 
+ being cash-on-hand, 
 \begin_inset Formula $tr_{t}$
 \end_inset
 
@@ -583,6 +583,18 @@ cite{lusardi2017optimal}
 \begin_inset Formula $97\%$
 \end_inset
 
+
+\begin_inset Foot
+status collapsed
+
+\begin_layout Plain Layout
+It is of course likely that agents choose a large share of risky assets
+ when they are young and decrease this share over the life-time, but this
+ is not considered here.
+\end_layout
+
+\end_inset
+
 .
  Thus, not only will our implementation reduce the choice space for 
 \begin_inset Formula $\kappa$
@@ -601,6 +613,138 @@ cite{lusardi2017optimal}
 
 , i.e.
  the government won't pay for obtaining the technology.
+\end_layout
+
+\begin_layout Subsection
+Calibration of model parameters and functional forms
+\end_layout
+
+\begin_layout Subsubsection
+Functions
+\end_layout
+
+\begin_layout Standard
+We follow in large part the choices made by 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+cite{lusardi2017optimal}
+\end_layout
+
+\end_inset
+
+ whom we refer to for additional insights (section V).
+ The utility function is chosen as 
+\begin_inset Formula 
+\begin{equation}
+u(c_{t},t)=\frac{n_{e,t}}{1-\rho_{u}}\left(\frac{c_{t}}{n_{e,t}}\right)^{1-\rho_{u}}\label{eq:utility_func}
+\end{equation}
+
+\end_inset
+
+with 
+\begin_inset Formula $\rho_{u}=0.96$
+\end_inset
+
+.
+ 
+\begin_inset Formula $n_{e,t}$
+\end_inset
+
+ is a house-hold equivalent
+\end_layout
+
+\begin_layout Standard
+The costs functions for obtaining and having financial knowledge are 
+\begin_inset Formula 
+\[
+\pi(i)=50i^{1.75}
+\]
+
+\end_inset
+
+and the fixed cost of having risky assets is 
+\begin_inset Formula $c_{d}=750$
+\end_inset
+
+.
+ The excess return function on financial literacy is linear in 
+\begin_inset Formula $f_{t}$
+\end_inset
+
+
+\begin_inset Formula 
+\[
+r(f_{t})=\bar{r}+\alpha f_{t},\:\alpha=\frac{r_{max}-r_{min}}{f_{max}-f_{min}}=\frac{0.04-0.00}{5-0}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where 
+\begin_inset Formula $\bar{r}=0.02$
+\end_inset
+
+\SpecialChar endofsentence
+ We estimate the education-specific income process 
+\begin_inset Formula $g_{e}(t)$
+\end_inset
+
+ with a degree 
+\begin_inset Formula $3$
+\end_inset
+
+ polynomial regression on from Figure 1 in 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+cite{lusardi2017optimal}
+\end_layout
+
+\end_inset
+
+, and we also calibrate mortality rates 
+\begin_inset Formula $\rho_{e,t}$
+\end_inset
+
+ from http://www.bandolier.org.uk/booth/Risk/dyingage.html.
+ In the initial model, we also set transfers 
+\begin_inset Formula $tr_{t}$
+\end_inset
+
+ to zero for simplicity.
+\end_layout
+
+\begin_layout Subsubsection
+Other model parameters, grids and nodes
+\end_layout
+
+\begin_layout Standard
+We set 
+\begin_inset Formula $\beta=0.98$
+\end_inset
+
+, 
+\begin_inset Formula $\delta=0.04$
+\end_inset
+
+ and 
+\begin_inset Formula $G=1.00$
+\end_inset
+
+ such that the income process is a deterministic education-specific process
+ with a random walk.
 \end_layout
 
 \begin_layout Subsection
@@ -685,6 +829,10 @@ f_{t+1}=(1-\delta)f_{t}+i_{t}
 Computational aspects
 \end_layout
 
+\begin_layout Subsubsection
+Solving the model
+\end_layout
+
 \begin_layout Standard
 We solve the model for the three different types of education group agents
  seperately, which reduces the computational state space to 
@@ -726,10 +874,11 @@ We solve the model for the three different types of education group agents
  interpolation of the value function array.
 \end_layout
 
-\begin_layout Standard
-\begin_inset Formula $\{\tilde{s}\}_{i,j,k}^{I,J,K}$
-\end_inset
+\begin_layout Subsubsection
+Speeding up the code
+\end_layout
 
+\begin_layout Standard
 
 \end_layout
 
@@ -750,10 +899,10 @@ To avoid expensive evaluations of
 \begin_inset Formula $t$
 \end_inset
 
-, we construct a state grid of the post-decision states
+, we construct a grid of the post-decision states
 \begin_inset Formula 
 \[
-\tilde{s}=(a_{t},p_{t+1},f_{t+1})
+\tilde{s}=(\tilde{R}_{\kappa}(f_{t+1})a_{t},p_{t},f_{t+1})
 \]
 
 \end_inset
@@ -766,18 +915,16 @@ where
 \begin_inset Formula $a_{t}=m_{t}+tr_{t}-c_{t}-\pi(i_{t})-c_{d}I(\kappa_{t}>0)$
 \end_inset
 
- and 
-\begin_inset Formula $p_{t+1}=Gp_{t}$
-\end_inset
-
 , which we map into 
-\begin_inset Formula $E_{t}\left(V_{t+1}\left[\tilde{R}_{\kappa}(f_{t+1})a_{t}+Y_{t+1},p_{t+1},f_{t+1}\right]\right)$
+\begin_inset Formula $E_{t}\left(V_{t+1}\left[\tilde{R}_{\kappa}(f_{t+1})a_{t}+Y_{t+1},p_{t},f_{t+1}\right]\right)$
 \end_inset
 
 .
  Then, for each point in the state and choice space, we interpolate the
  expectation of the next-period value function, which reduces the amount
  of Gauss-Hermite integrations needed.
+ As there are three log-normal stochastic shocks to integrate out, this
+ increases the speed of the code significantly.
  The process is described in Algorithm 
 \begin_inset ERT
 status open
@@ -810,7 +957,9 @@ begin{algorithm}
 
 
 \backslash
-caption{Precomputations}
+caption{Precomputations.
+ This algorithm is employed in each period $t$ to calculate the next-period
+ expected value for a given choice and state.}
 \end_layout
 
 \begin_layout Plain Layout
@@ -838,7 +987,9 @@ tilde{s}
  Use Eq.
  (
 \backslash
-ref{eq:GH_integration}) to map this grid into $ E_{t}
+ref{eq:GH_integration}) to map this grid into $ W(
+\backslash
+tilde{s}_{t})=E_{t}
 \backslash
 left(V_{t+1}
 \backslash
@@ -871,31 +1022,13 @@ begin{algorithmic}
 
 \begin_layout Plain Layout
 
-\end_layout
-
-\begin_layout Plain Layout
-
 	
 \backslash
 STATE 
 \backslash
 textbf{Calculate next-period expected value:} 
 \backslash
-vspace{4mm}
-\end_layout
-
-\begin_layout Plain Layout
-
-	
-\backslash
-bindent
-\end_layout
-
-\begin_layout Plain Layout
-
-		
-\backslash
-STATE For all $s$ in statespace:
+vspace{1mm}
 \end_layout
 
 \begin_layout Plain Layout
@@ -904,14 +1037,38 @@ STATE For all $s$ in statespace:
 \backslash
 STATE 
 \backslash
-hskip1.5em for all
+hskip0.5em for a given $s$ in state space:
 \end_layout
 
 \begin_layout Plain Layout
 
-	
+		
 \backslash
-eindent
+STATE 
+\backslash
+hskip1.5em for a given $c$ in choice space:
+\end_layout
+
+\begin_layout Plain Layout
+
+		
+\backslash
+STATE 
+\backslash
+hskip2.5em calculate post-decision state $
+\backslash
+tilde{s}$
+\end_layout
+
+\begin_layout Plain Layout
+
+		
+\backslash
+STATE 
+\backslash
+hskip2.5em interpolate $ W(
+\backslash
+tilde{s}_{t})=E_{t}(V_{t+1}(s_{t+1})) $ 
 \end_layout
 
 \begin_layout Plain Layout
