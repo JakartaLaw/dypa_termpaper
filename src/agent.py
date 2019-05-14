@@ -37,7 +37,7 @@ def R_tilde(kappa, f, par, shock):
 #@njit
 def R_riskfree(par):
     # Might be changed don't know if r_min is correct
-    return 1 + par.r_min
+    return par.R_bar
 
 #@njit
 def R_riskful(f, par, shock):

@@ -7,6 +7,7 @@ from modules.agepolynomial import create_age_poly_array
 
 #from numba import int32, float32    # import the types
 
+N_GH = 2
 mortality = create_mortality()
 psi = hermgauss_lognorm(n=5, sigma=0.1)
 xi = hermgauss_lognorm(n=5, sigma=0.1)
@@ -41,7 +42,7 @@ parameters_initial = {
     "tolerance" : 10**(-6),
     "psi" : psi,
     "xi" : xi,
-    "eps" : eps,
+    "eps" : eps
 }
 
 hs_params = {key : value for key, value in parameters_initial.items()}

@@ -192,6 +192,6 @@ class Model():
             V_solution[t], C_solution[t] = Vstar, Cstar
             print("======== ENDING ===========")
             toc = time.time()
-            print(f' t = {t} solved in {toc-tic:.1f} secs')
+            #print(f' t = {t} solved in {toc-tic:.1f} secs')
 
         return V_solution, C_solution
