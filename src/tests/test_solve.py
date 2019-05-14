@@ -8,4 +8,6 @@ from collections import namedtuple
 #@pytest.mark.skip
 def test_can_call_find_V():
     m = Model()
-    m.solve(par)
+    res = m.solve(par)
+    import pdb; pdb.set_trace()
+    res

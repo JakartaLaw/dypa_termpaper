@@ -41,7 +41,8 @@ def R_riskfree(par):
 
 #@njit
 def R_riskful(f, par, shock):
-    return np.exp(par.r_min + r(f, par)) * shock
+    #return np.exp(par.r_min + r(f, par)) * shock
+    return 1.1
 
 # Return function of financial literacy assumed linear (p. 450)
 #@njit
@@ -60,9 +61,12 @@ def tr():
 #@njit
 def pi(i):
     # constants are derived from the paper
-    return 50*(i**1.75)
+    return - 1000*(i**1.75)
+    #return 50*(i**1.75)
 
 #@njit
 def kappa_cost(kappa):
     # constants are derived from the paper
-    return 750 * (kappa > 0)
+
+    # return 750 * (kappa > 0)
+    return 0 * (kappa > 0)

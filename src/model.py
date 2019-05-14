@@ -174,7 +174,8 @@ class Model():
             V_solution[t], C_solution[t] = Vstar, Cstar
 
             Vstar_plus, Cstar_plus = self.create_Vstar(statespace), self.create_Cstar(statespace)
-            ld = create_lookup_dict(statespace, Vstar_plus)
+            ld = create_lookup_dict(statespace, Vstar)
+            #import pdb; pdb.set_trace()
             Vstar_mesh = create_mesh(m_grid, f_grid, p_grid, ld, par)
 
             interpolant = Interpolate3D(m_grid, f_grid, p_grid, Vstar_mesh)
@@ -194,4 +195,4 @@ class Model():
             toc = time.time()
             print(f' t = {t} solved in {toc-tic:.1f} secs')
 
-        return V_solution, C_solution
+        return V_solution, C_solution, interpolant
