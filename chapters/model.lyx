@@ -947,6 +947,18 @@ We solve the model for the three different types of education group agents
 Speeding up the code
 \end_layout
 
+\begin_layout Paragraph
+Numba and parallelization
+\end_layout
+
+\begin_layout Paragraph
+New interpolant
+\end_layout
+
+\begin_layout Paragraph
+Precomputations
+\end_layout
+
 \begin_layout Standard
 
 \end_layout

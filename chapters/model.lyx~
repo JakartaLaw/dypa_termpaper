@@ -840,7 +840,7 @@ which can be done via Gauss-Hermite integration as all shocks are log-normally
 \end_inset
 
  nodes for each of the three stochastic elements 
-\begin_inset Formula $\{\psi_{n},\xi_{n},\epsilon_{n}\}_{n=1}^{8}$
+\begin_inset Formula $\{\psi_{n},\xi_{n},\epsilon_{n}\}_{n=1}^{N_{GH}}$
 \end_inset
 
 , and we then calculate the expectation of the value function given a realizatio

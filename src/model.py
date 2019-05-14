@@ -29,43 +29,7 @@ class Model():
         """
         return LinearNDInterpolator(statespace, Vstar)
 
-    # @jit(parallel = True)
-    # def V_integrate(self, choice, state, par, interpolant):
-    #     '''Calculates E_t(V_t+1) via brute force looping'''
-    #
-    #     # global NUMBER_OF_ITERATIONS
-    #     # NUMBER_OF_ITERATIONS = NUMBER_OF_ITERATIONS + 1
-    #
-    #     V_fut = 0.0
-    #
-    #     # Calculations that can be moved outside the loop
-    #     state = update_f(choice, state, par) # updateting to f_t+1
-    #     assets = calc_a(choice, state, par)
-    #
-    #     # refactored loop to return a value and weight from gaus_hermite
-    #     for psi, psi_w in par.psi:
-    #         for xi, xi_w in par.xi:
-    #             for eps, eps_w in par.eps:
-    #
-    #                 #state = update_f(choice, state, par) # updateting to f_t+1
-    #                 interest_factor = R_tilde(choice, state, par, shock=eps)
-    #                 #assets = calc_a(choice, state, par)
-    #                 income = xi * (par.G * state.p * psi) + par.age_poly[state.t+1]
-    #
-    #                 # Future state values
-    #                 m_fut = interest_factor * assets + income
-    #                 p_fut = par.G * state.p * psi
-    #                 f_fut = state.f
-    #                 s_fut = (m_fut, f_fut, p_fut)
-    #
-    #                 V = psi_w * xi_w * eps_w * interpolant(s_fut) # GH weighting
-    #
-    #                 V_fut += V
-    #
-    #     return V_fut
-
-
-    @jit(parallel = True)
+    @jit(parallel = False)
     def V_integrate(self, choice, state, par, interpolant):
         '''Calculates E_t(V_t+1) via brute force looping'''
 
@@ -79,14 +43,9 @@ class Model():
         assets = calc_a(choice, state, par)
 
         # refactored loop to return a value and weight from gaus_hermite
-        N_GH = 2
-        for(j_psi) in prange(N_GH):
-            for(i_xi) in prange(N_GH):
-                for(k_eps) in prange(N_GH):
-                    # Allocate to correct index
-                    psi, psi_w = par.psi[j_psi,0], par.psi[j_psi,1]
-                    xi, xi_w = par.xi[i_xi,0], par.xi[i_xi,1]
-                    eps, eps_w = par.eps[k_eps,0], par.eps[k_eps,1]
+        for psi, psi_w in par.psi:
+            for xi, xi_w in par.xi:
+                for eps, eps_w in par.eps:
 
                     #state = update_f(choice, state, par) # updateting to f_t+1
                     interest_factor = R_tilde(choice, state, par, shock=eps)
@@ -104,6 +63,47 @@ class Model():
                     V_fut += V
 
         return V_fut
+
+
+    # @jit(parallel = True)
+    # def V_integrate(self, choice, state, par, interpolant):
+    #     '''Calculates E_t(V_t+1) via brute force looping'''
+    #
+    #     # global NUMBER_OF_ITERATIONS
+    #     # NUMBER_OF_ITERATIONS = NUMBER_OF_ITERATIONS + 1
+    #
+    #     V_fut = 0.0
+    #
+    #     # Calculations that can be moved outside the loop
+    #     state = update_f(choice, state, par) # updateting to f_t+1
+    #     assets = calc_a(choice, state, par)
+    #
+    #     # refactored loop to return a value and weight from gaus_hermite
+    #     N_GH = 4
+    #     for(j_psi) in prange(N_GH):
+    #         for(i_xi) in range(N_GH):
+    #             for(k_eps) in range(N_GH):
+    #                 # Allocate to correct index
+    #                 psi, psi_w = par.psi[j_psi,0], par.psi[j_psi,1]
+    #                 xi, xi_w = par.xi[i_xi,0], par.xi[i_xi,1]
+    #                 eps, eps_w = par.eps[k_eps,0], par.eps[k_eps,1]
+    #
+    #                 #state = update_f(choice, state, par) # updateting to f_t+1
+    #                 interest_factor = R_tilde(choice, state, par, shock=eps)
+    #                 #assets = calc_a(choice, state, par)
+    #                 income = xi * (par.G * state.p * psi) + par.age_poly[state.t+1]
+    #
+    #                 # Future state values
+    #                 m_fut = interest_factor * assets + income
+    #                 p_fut = par.G * state.p * psi
+    #                 f_fut = state.f
+    #                 s_fut = (m_fut, f_fut, p_fut)
+    #
+    #                 V = psi_w * xi_w * eps_w * interpolant(s_fut) # GH weighting
+    #
+    #                 V_fut += V
+    #
+    #     return V_fut
 
     def find_V(self, i, kappa, state, par, interpolant):
         '''Find optimal c for all states for given choices (i,kappa) in period t'''
