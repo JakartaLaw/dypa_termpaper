@@ -1,7 +1,7 @@
 # Libraries
 import numpy as np
 from scipy import interpolate
-from scipy.optimize import minimize_scalar
+from scipy.optimize import minimize_scalar, minimize
 from scipy.interpolate import LinearNDInterpolator
 from collections import namedtuple
 import datetime
@@ -45,10 +45,18 @@ def V_integrate(c, kappa, i, m, f, p, t, par, interpolant):
                 # Future state values
                 m_fut = interest_factor * assets + income
                 p_fut = par.G * p * psi
-                f_fut = f
+                f_fut = np.float64(f)
 
-                V = psi_w * xi_w * eps_w * interpolant.interpolate(m_fut, f_fut, p_fut) # GH weighting
-
+                interp_ = interpolant.interpolate(m_fut, f_fut, p_fut)
+                V = psi_w * xi_w * eps_w * interp_ # GH weighting
+                if np.isnan(V) == True:
+                    import pdb; pdb.set_trace()
+                    print('interp', interp_, type(interp_))
+                    print('types', type(m_fut), type(f_fut), type(p_fut))
+                    print('m, f, p',m_fut, f_fut, p_fut)
+                    print('types', type(psi), type(xi_w), type(eps_w))
+                    print('psi, xi_w, eps_w', psi_w * xi_w * eps_w)
+                    raise ValueError('errors')
                 V_fut += V
 
     return V_fut
@@ -59,26 +67,36 @@ class Model():
     def find_V(self, i, kappa, m, f, p, t, par, interpolant):
         '''Find optimal c for all states for given choices (i,kappa) in period t'''
 
+        #OLD CODE:
         if t == par.max_age - 1:
-            Vfunc = lambda c: utility(c, t, par)
+            n, rho_u = par.n[t], par.rho_u
+            Vfunc = lambda c: utility(c, n, rho_u)
         else:
-            Vfunc = lambda c: utility(c, t, par) + \
+            n, rho_u = par.n[t], par.rho_u
+            Vfunc = lambda c: utility(c, n, rho_u) + \
             par.beta * par.mortality[t] * \
             V_integrate(c, kappa, i, m, f, p, t, par, interpolant)
+
+        #NEW CODE:
+        # n, rho_u = par.n[t], par.rho_u
+        # Vfunc = lambda c: utility(c, n, rho_u) + \
+        # par.beta * par.mortality[t] * \
+        # V_integrate(c, kappa, i, m, f, p, t, par, interpolant)
 
         # Optimizer
         # Convert function to negative for minimization
         Vfunc_neg = lambda x: -Vfunc(x)
 
         # c) Find optimum
-        res = minimize_scalar(Vfunc_neg, tol = par.tolerance
-                              , bounds = [1, m], method = "bounded")
+        res = minimize_scalar(Vfunc_neg, tol = par.tolerance, bounds = [1, m], method = "bounded")
+        if t == 89:
+            print(res.fun, res.x)
 
         Vstar, Cstar = float(-res.fun), float(res.x)
 
         return Vstar, Cstar
 
-    @jit
+    #@jit
     def find_V_for_choices(self, state, par, interpolant):
         '''Find optimal V for all i, k in period t'''
 
@@ -113,12 +131,15 @@ class Model():
         '''Only applicable for final period T'''
         Vstar = self.create_Vstar(statespace)
         for state_index, s in enumerate(statespace):
-            m, t = s[0], par.max_age
+            m, n, rho_u = s[0], par.n[89], par.rho_u
             try:
-                Vstar[state_index] = utility(m, t, par)
-            except:
+                _u = utility(m, n, rho_u)
+                Vstar[state_index] = _u
+                if np.isnan(_u) is True:
+                    print("initialize v star", m, n, rho_u)
+            except Exception as e:
                 print(m, t, par.rho_u)
-                raise Exception('the values was:', m, t, par.rho_u)
+                raise Exception('the values was:', m, t, par.rho_u, e)
         return Vstar
 
     def initialize_Cstar(self, statespace, par):

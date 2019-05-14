@@ -49,10 +49,10 @@ def interp_3d(grid1,grid2,grid3,value,xi1,xi2,xi3):
 
 
 spec = [
-    ('grid1', float64[:]),
-    ('grid2', float64[:]),
-    ('grid3', float64[:]),
-    ('values', float64[:, :, :])
+    ('grid1', double[:]),
+    ('grid2', double[:]),
+    ('grid3', double[:]),
+    ('values', double[:, :, :])
 ]
 
 @jitclass(spec)
