@@ -195,4 +195,4 @@ class Model():
             toc = time.time()
             print(f' t = {t} solved in {toc-tic:.1f} secs')
 
-        return V_solution, C_solution, interpolant
+        return V_solution, C_solution

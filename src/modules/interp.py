@@ -65,3 +65,63 @@ class Interpolate3D(object):
 
     def interpolate(self, x_i, y_i, z_i):
         return interp_3d(self.grid1, self.grid2, self.grid3, self.values, x_i, y_i, z_i)
+
+
+@njit(double(double[:],double[:],double[:],double[:,:,:],double,double,double,double,double))
+def majority_3d(grid1,grid2,grid3,value, low_val, high_val, xi1,xi2,xi3,):
+    """Majority when only to classes
+
+    cutoff is the parameter, that separates the two classes
+    """
+
+    cutoff = (low_val + high_val)/2
+    res = low_val
+
+    # a. search in each dimension
+    j1 = binary_search(0,grid1.size,grid1,xi1)
+    j2 = binary_search(0,grid2.size,grid2,xi2)
+    j3 = binary_search(0,grid3.size,grid3,xi3)
+
+    class1 = 0
+
+    if grid1[j1+1] > cutoff:
+        class1 += 1
+    if grid1[j1] > cutoff:
+        class1 += 1
+    if grid2[j2+1] > cutoff:
+        class1 += 1
+    if grid2[j2] > cutoff:
+        class1 += 1
+    if grid3[j3+1] > cutoff:
+        class1 += 1
+    if grid3[j3] > cutoff:
+        class1 += 1
+
+    if class1 >= 3:
+
+        res = high_val
+
+    return res
+
+
+spec_vote = [
+    ('grid1', double[:]),
+    ('grid2', double[:]),
+    ('grid3', double[:]),
+    ('values', double[:, :, :]),
+    ('low_val', double),
+    ('high_val', double)
+]
+
+@jitclass(spec_vote)
+class Majority3D(object):
+    def __init__(self, grid1, grid2, grid3, values, low_val, high_val):
+        self.grid1 = grid1
+        self.grid2 = grid2
+        self.grid3 = grid3
+        self.values = values
+        self.low_val = low_val
+        self.high_val = high_val
+
+    def interpolate(self, x_i, y_i, z_i):
+        return majority_3d(self.grid1, self.grid2, self.grid3, self.values, self.low_val, self.high_val, x_i, y_i, z_i)
