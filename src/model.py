@@ -22,6 +22,10 @@ from modules.interp import Interpolate3D
 
 from numba import jit, njit
 
+# For parallelization
+# from joblib import Parallel, delayed
+# import multiprocessing
+
 def V_integrate(c, kappa, i, m, f, p, t, par, interpolant):
     '''Calculates E_t(V_t+1) via brute force looping'''
 
@@ -31,7 +35,7 @@ def V_integrate(c, kappa, i, m, f, p, t, par, interpolant):
     V_fut = 0.0
 
     # Calculations that can be moved outside the loop
-    state = update_f(i, f, par) # updateting to f_t+1
+    f = update_f(i, f, par) # updateting to f_t+1
     assets = calc_a(c, i, kappa, m, par)
 
     # refactored loop to return a value and weight from gaus_hermite
@@ -40,8 +44,7 @@ def V_integrate(c, kappa, i, m, f, p, t, par, interpolant):
             for eps, eps_w in par.eps:
 
                 interest_factor = R_tilde(kappa, f, par, shock=eps)
-                income = xi * (par.G * p * psi) + par.age_poly[t+1]
-
+                income = xi * (par.G * p * psi) + par.age_poly[t] # Notice, here t is t+1 as it refers to the index
                 # Future state values
                 m_fut = interest_factor * assets + income
                 p_fut = par.G * p * psi
@@ -61,6 +64,39 @@ def V_integrate(c, kappa, i, m, f, p, t, par, interpolant):
 
     return V_fut
 
+# def processInput(c, kappa, i, m, f, p, t, par, interpolant):
+#     psi = par.psi[i][0]
+#     psi_w = par.psi[i][1]
+#     for xi, xi_w in par.xi:
+#         for eps, eps_w in par.eps:
+#
+#             interest_factor = R_tilde(kappa, f, par, shock=eps)
+#             income = xi * (par.G * p * psi) + par.age_poly[t] # Notice, here t is t+1 as it refers to the index
+#
+#             # Future state values
+#             m_fut = interest_factor * assets + income
+#             p_fut = par.G * p * psi
+#             f_fut = np.float64(f)
+#
+#             interp_ = interpolant.interpolate(m_fut, f_fut, p_fut)
+#             V = psi_w * xi_w * eps_w * interp_ # GH weighting
+#     return V
+#
+# def V_integrate(c, kappa, i, m, f, p, t, par, interpolant):
+#     '''Calculates E_t(V_t+1) via brute force looping'''
+#
+#     V_fut = 0.0
+#     # Calculations that can be moved outside the loop
+#     f = update_f(i, f, par) # updateting to f_t+1
+#     assets = calc_a(c, i, kappa, m, par)
+#
+#     # refactored loop to return a value and weight from gaus_hermite
+#     num_cores = multiprocessing.cpu_count()
+#     V = Parallel(n_jobs=2)(delayed(processInput)(c = c, kappa = kappa, i = i, m = m, f = f, p = p, t = t, par = par, interpolant = interpolant) for i in range(5))
+#     V_fut += V
+#
+#     return V_fut
+
 
 class Model():
 
@@ -68,20 +104,20 @@ class Model():
         '''Find optimal c for all states for given choices (i,kappa) in period t'''
 
         #OLD CODE:
-        if t == par.max_age - 1:
-            n, rho_u = par.n[t], par.rho_u
-            Vfunc = lambda c: utility(c, n, rho_u)
-        else:
-            n, rho_u = par.n[t], par.rho_u
-            Vfunc = lambda c: utility(c, n, rho_u) + \
-            par.beta * par.mortality[t] * \
-            V_integrate(c, kappa, i, m, f, p, t, par, interpolant)
+        # if t == par.max_age - 1:
+        #     n, rho_u = par.n[t], par.rho_u
+        #     Vfunc = lambda c: utility(c, n, rho_u)
+        # else:
+        #     n, rho_u = par.n[t], par.rho_u
+        #     Vfunc = lambda c: utility(c, n, rho_u) + \
+        #     par.beta * par.mortality[t] * \
+        #     V_integrate(c, kappa, i, m, f, p, t, par, interpolant)
 
         #NEW CODE:
-        # n, rho_u = par.n[t], par.rho_u
-        # Vfunc = lambda c: utility(c, n, rho_u) + \
-        # par.beta * par.mortality[t] * \
-        # V_integrate(c, kappa, i, m, f, p, t, par, interpolant)
+        n, rho_u = par.n[t], par.rho_u
+        Vfunc = lambda c: utility(c, n, rho_u) + \
+        par.beta * par.mortality[t] * \
+        V_integrate(c, kappa, i, m, f, p, t, par, interpolant)
 
         # Optimizer
         # Convert function to negative for minimization
@@ -89,8 +125,8 @@ class Model():
 
         # c) Find optimum
         res = minimize_scalar(Vfunc_neg, tol = par.tolerance, bounds = [1, m], method = "bounded")
-        if t == 89:
-            print(res.fun, res.x)
+        # if t == 89:
+        #     print(res.fun, res.x)
 
         Vstar, Cstar = float(-res.fun), float(res.x)
 
@@ -115,7 +151,6 @@ class Model():
                 C, V = ChoiceTuple(_C, kappa, i), _V
 
         return V, C
-
 
     @staticmethod
     def create_Vstar(statespace):
@@ -164,12 +199,16 @@ class Model():
         # backwards loop:
         V_solution[par.max_age], C_solution[par.max_age] = Vstar, Cstar
 
+
+        start_time = time.time()
         # 1) (V_star_interpolant) interpolant over næste periode mellem m_grid og v_star_t+1
         for t in reversed(range(par.start_age, par.max_age)):
 
-            print("======== BEGINNING ============")
-            print('Solution at time step t: ', t, ', time is: ', datetime.datetime.utcnow())
+            # print("======== BEGINNING ============")
+            print('Solution at time step t: ', t, ', time is: ', datetime.datetime.utcnow() , end = "\r")
             tic = time.time()
+            #print('Solutions is at time step', t, ". Elapsed time:", tic - start_time, end = "\r")
+            #print('Solutions is at time step', t, end = "\r")
 
             V_solution[t], C_solution[t] = Vstar, Cstar
 
@@ -182,8 +221,8 @@ class Model():
 
             for s_ix, s in enumerate(statespace):
                 #print(NUMBER_OF_ITERATIONS)
-                if s_ix % 100 == 0:
-                    print(s_ix,  'time is: ', datetime.datetime.utcnow())
+                # if s_ix % 100 == 0:
+                #     print(s_ix,  'time is: ', datetime.datetime.utcnow())
                 m, f, p = s[0], s[1], s[2]
                 state = StateTuple(m, f, p, t)
                 V, C = self.find_V_for_choices(state, par, interpolant)
@@ -191,8 +230,8 @@ class Model():
 
             Vstar, Cstar = Vstar_plus, Cstar_plus
             V_solution[t], C_solution[t] = Vstar, Cstar
-            print("======== ENDING ===========")
+            #print("======== ENDING ===========")
             toc = time.time()
-            print(f' t = {t} solved in {toc-tic:.1f} secs')
+            #print(f' t = {t} solved in {toc-tic:.1f} secs')
 
         return V_solution, C_solution

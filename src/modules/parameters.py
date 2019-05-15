@@ -26,6 +26,7 @@ spec = [
     ("r_max", double,),
     ("r_min", double,),
     ("R_bar", double,),
+    ("r_bar", double,),
     ("G", double,),
     ("tolerance", double,),
     ("psi", double[:, :],),
@@ -60,6 +61,7 @@ class Parameters(object):
         r_max,
         r_min,
         R_bar,
+        r_bar,
         G,
         tolerance,
         psi,
@@ -88,6 +90,7 @@ class Parameters(object):
         self.r_max = r_max
         self.r_min = r_min
         self.R_bar = R_bar
+        self.r_bar = r_bar
         self.G = G
         self.tolerance = tolerance
         self.psi = psi

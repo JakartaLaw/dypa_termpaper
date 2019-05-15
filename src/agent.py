@@ -37,19 +37,19 @@ def R_tilde(kappa, f, par, shock):
 #@njit
 def R_riskfree(par):
     # Might be changed don't know if r_min is correct
-    return 1 + par.r_min
+    return par.R_bar # 1.02 given in paper
 
 #@njit
 def R_riskful(f, par, shock):
-    #return np.exp(par.r_min + r(f, par)) * shock
-    return 1.1
+    return np.exp(par.r_min + r(f, par)) * shock
+    #return 1.1
 
 # Return function of financial literacy assumed linear (p. 450)
 #@njit
 def r(f, par):
     # Calculate slope
     slope = (par.r_max - par.r_min)/(par.f_max - par.f_min)
-    return par.r_min + slope * f
+    return par.r_bar + slope * f
 
 # Government transfer
 #@njit
@@ -57,12 +57,11 @@ def tr():
     return 0
     #return max(par.cmin - x, 0)
 
-# Cost function for financial knowledge (p. 451, bottom). Combining both fixed and variable
 #@njit
 def pi(i):
     # constants are derived from the paper
-    return - 1000*(i**1.75)
-    #return 50*(i**1.75)
+    # return 0 * (i > 0)
+    return 50*(i**1.75)
 
 #@njit
 def kappa_cost(kappa):
