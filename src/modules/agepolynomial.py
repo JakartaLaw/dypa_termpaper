@@ -9,9 +9,9 @@ def create_age_poly_array(education_lvl):
 
     # Load data
     age = np.array([25,30,35,40,45,50,55,60,65]).reshape(-1,1)
-    col = np.array([40, 50, 57, 62, 66, 67, 65, 61, 54])
-    hs = np.array([32, 37, 42, 46, 49, 50, 48, 44, 37])
-    lhs = np.array([26, 31, 34, 38, 39, 39, 37, 34, 31])
+    col = np.array([40, 50, 57, 62, 66, 67, 65, 61, 54]) * 1000
+    hs = np.array([32, 37, 42, 46, 49, 50, 48, 44, 37]) * 1000
+    lhs = np.array([26, 31, 34, 38, 39, 39, 37, 34, 31]) * 1000
     educ = [lhs, hs, col]
 
     # Setup degree 3 regression and output dict format
@@ -35,4 +35,4 @@ def create_age_poly_array(education_lvl):
 
     # Return age polynomials with zeros for age 0-24 and 66-90
     poly =  np.append(np.zeros(25), np.append(pred_income[education_lvl], np.zeros(25)))
-    return np.array(poly, dtype=np.float32)
+    return np.array(poly)
