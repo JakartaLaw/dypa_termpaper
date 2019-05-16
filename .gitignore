@@ -112,3 +112,6 @@ venv.bak/
 *.idx
 *.ilg
 *.ind
+
+# We dont send solutions over git:
+*.pkl
