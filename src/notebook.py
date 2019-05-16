@@ -41,11 +41,11 @@ C_sol[80]
 
 # Test R return
 #
-# agent.R_riskful(5, par, 1)
-#
-#
-# agent.R_riskfree(par)
-# test_sp = create_statespace(par)
-# test_sp[30:32]
-#
-# test_sp[30:32]
+agent.R_riskful(20, par, 1)
+
+
+agent.R_riskfree(par)
+test_sp = create_statespace(par)
+test_sp[30:32]
+
+test_sp[30:32]
