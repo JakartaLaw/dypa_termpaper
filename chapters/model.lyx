@@ -26,6 +26,16 @@
 
 \usepackage{algorithm}
 \usepackage{algorithmic}
+
+
+\newlength\myindent
+\setlength\myindent{2em}
+\newcommand\bindent{%
+  \begingroup
+  \setlength{\itemindent}{\myindent}
+  \addtolength{\algorithmicindent}{\myindent}
+}
+\newcommand\eindent{\endgroup}
 \end_preamble
 \use_default_options true
 \begin_modules
@@ -206,7 +216,20 @@ Model
 \end_layout
 
 \begin_layout Subsection
-Setup
+Setup 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+label{sec:setup}
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -229,7 +252,7 @@ cite{lusardi2017optimal}
 \begin_inset Formula $\text{oop}_{e,t}$
 \end_inset
 
- in the original model)
+ in the original model).
 \end_layout
 
 \begin_layout Standard
@@ -389,11 +412,11 @@ reference "eq:asset_acc"
 
 \end_inset
 
- is the accummulation of assets, where 
+ is the accummulation of assets with 
 \begin_inset Formula $m_{t}$
 \end_inset
 
- is cash-on-hand, 
+ being cash-on-hand, 
 \begin_inset Formula $tr_{t}$
 \end_inset
 
@@ -573,6 +596,18 @@ cite{lusardi2017optimal}
 \begin_inset Formula $97\%$
 \end_inset
 
+
+\begin_inset Foot
+status collapsed
+
+\begin_layout Plain Layout
+It is of course likely that agents choose a large share of risky assets
+ when they are young and decrease this share over the life-time, but this
+ is not considered here.
+\end_layout
+
+\end_inset
+
 .
  Thus, not only will our implementation reduce the choice space for 
 \begin_inset Formula $\kappa$
@@ -580,17 +615,259 @@ cite{lusardi2017optimal}
 
 , it can possibly also aid in a better fit to the data, as the original
  model clearly overshoots the amount people invest in risky assets.
- Finally, we follow the original paper where it is only feasible to invest
- in the technology 
-\begin_inset Formula $\kappa_{t}>0$
+ Finally, we also allow for borrowing (
+\begin_inset Formula $a_{t}<0$
 \end_inset
 
- if 
-\begin_inset Formula $c_{\min}<m_{t}-c_{d}$
+), such that it is always possible to invest in acquiring financial knowledgee.
+\end_layout
+
+\begin_layout Subsection
+Calibration of model parameters and functional forms
+\end_layout
+
+\begin_layout Subsubsection
+Functions
+\end_layout
+
+\begin_layout Standard
+We follow in large part the choices made by 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+cite{lusardi2017optimal}
+\end_layout
+
 \end_inset
 
-, i.e.
- the government won't pay for obtaining the technology.
+ whom we refer to for additional insights (section V).
+ The utility function is chosen as 
+\begin_inset Formula 
+\begin{equation}
+u(c_{t},t)=\frac{n_{e,t}}{1-\sigma}\left(\frac{c_{t}}{n_{e,t}}\right)^{1-\sigma}\label{eq:utility_func}
+\end{equation}
+
+\end_inset
+
+with 
+\begin_inset Formula $\sigma=0.96$
+\end_inset
+
+.
+ 
+\begin_inset Formula $n_{e,t}$
+\end_inset
+
+ is a household equivalence that accounts for differences in composition
+ of the household over a life cycle, which is defined as 
+\begin_inset Formula 
+\[
+n_{e,t}=\frac{z(j_{e,t},k_{e,t})}{z(2,1)}
+\]
+
+\end_inset
+
+where 
+\begin_inset Formula $j$
+\end_inset
+
+ is the number of adults in the household, 
+\begin_inset Formula $k$
+\end_inset
+
+ the number of children, and 
+\begin_inset Formula $z(j,k)=(j+0.7k)^{0.75}$
+\end_inset
+
+ and 
+\begin_inset Formula $z(2,1)$
+\end_inset
+
+ is then the household equivalence scale for a household with two adults
+ and a child.
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+hspace{4mm}
+\end_layout
+
+\end_inset
+
+The costs functions for obtaining financial knowledge and investing in risky
+ assets are both fixed and given by
+\begin_inset Formula 
+\begin{align*}
+\pi(i) & =500\times\mathbf{1}(i>0)\\
+c_{d} & =500
+\end{align*}
+
+\end_inset
+
+The excess return function on financial literacy is linear in 
+\begin_inset Formula $f_{t}$
+\end_inset
+
+
+\begin_inset Formula 
+\[
+r(f_{t})=\bar{r}+\alpha f_{t},\:\alpha=\frac{r_{max}-r_{min}}{f_{max}-f_{min}}=\frac{0.04-0.00}{60-0}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where 
+\begin_inset Formula $\bar{r}=0.02$
+\end_inset
+
+\SpecialChar endofsentence
+ This formulation means that the approximate expected return factor on the
+ risky asset 
+\begin_inset Formula $\tilde{R}(f_{t+1})$
+\end_inset
+
+ for 
+\begin_inset Formula $f_{t+1}=0$
+\end_inset
+
+ is 
+\begin_inset Formula $1.02$
+\end_inset
+
+, for 
+\begin_inset Formula $f_{t}=10$
+\end_inset
+
+ it is 
+\begin_inset Formula $1.04$
+\end_inset
+
+ and for 
+\begin_inset Formula $f_{t}=60$
+\end_inset
+
+ it is 
+\begin_inset Formula $1.12$
+\end_inset
+
+.
+ We estimate the education-specific income process 
+\begin_inset Formula $g_{e}(t)$
+\end_inset
+
+ with a degree 
+\begin_inset Formula $3$
+\end_inset
+
+ polynomial regression on from Figure 1 in 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+cite{lusardi2017optimal}
+\end_layout
+
+\end_inset
+
+, and we also calibrate mortality rates 
+\begin_inset Formula $\rho_{e,t}$
+\end_inset
+
+ from http://www.bandolier.org.uk/booth/Risk/dyingage.html.
+ In the initial model, we also set transfers 
+\begin_inset Formula $tr_{t}$
+\end_inset
+
+ to zero for simplicity.
+\end_layout
+
+\begin_layout Subsubsection
+Other model parameters, grids and nodes
+\end_layout
+
+\begin_layout Standard
+We set 
+\begin_inset Formula $\beta=0.98$
+\end_inset
+
+, 
+\begin_inset Formula $\delta=0.04$
+\end_inset
+
+ and 
+\begin_inset Formula $G=1.00$
+\end_inset
+
+ such that the income process is a deterministic education-specific process
+ with a random walk (meaning permanent income models additional income paths
+ diverging from the deterministic age-polynomial process).
+ We construct a non-linear grid over cash-on-hand 
+\begin_inset Formula $m_{t}$
+\end_inset
+
+ in the interval 
+\begin_inset Formula $[10,000;500,000]$
+\end_inset
+
+, 
+\begin_inset Formula $p_{t}$
+\end_inset
+
+ in the interval 
+\begin_inset Formula $[-5,000;10,000]$
+\end_inset
+
+ and 
+\begin_inset Formula $f_{t}$
+\end_inset
+
+ in 
+\begin_inset Formula $[0;60]$
+\end_inset
+
+, where we for 
+\begin_inset Formula $m_{t}$
+\end_inset
+
+ and 
+\begin_inset Formula $f_{t}$
+\end_inset
+
+ choose an 
+\begin_inset Formula $8$
+\end_inset
+
+-dimensional grid and for 
+\begin_inset Formula $p_{t}$
+\end_inset
+
+ a 
+\begin_inset Formula $6$
+\end_inset
+
+-dimensional grid.
+ For Gauss-Hermite integration, we choose 
+\begin_inset Formula $N_{GH}=4$
+\end_inset
+
+ in order to speed up the code.
 \end_layout
 
 \begin_layout Subsection
@@ -613,11 +890,11 @@ E_{t}[V_{t+1}(m_{t+1},p_{t+1},f_{t+1})]=\int_{\psi_{t}}\int_{\xi_{t}}\int_{\epsi
 which can be done via Gauss-Hermite integration as all shocks are log-normally
  distributed.
  We draw 
-\begin_inset Formula $8$
+\begin_inset Formula $N_{GH}=5$
 \end_inset
 
  nodes for each of the three stochastic elements 
-\begin_inset Formula $\{\psi_{n},\xi_{n},\epsilon_{n}\}_{n=1}^{8}$
+\begin_inset Formula $\{\psi_{n},\xi_{n},\epsilon_{n}\}_{n=1}^{N_{GH}}$
 \end_inset
 
 , and we then calculate the expectation of the value function given a realizatio
@@ -634,9 +911,9 @@ n of the state space
 
 \begin_layout Standard
 \begin_inset Formula 
-\[
-E_{t}(V_{t+1}(m_{t+1},p_{t+1},f_{t+1}))=\sum_{j=1}^{8}w_{j}^{\psi}\sum_{i=1}^{8}w_{i}^{\xi}\sum_{k=1}^{8}w_{k}^{\epsilon}V_{t+1}\left(m_{t+1}^{jik},p_{t+1}^{j},f_{t+1}\right)
-\]
+\begin{equation}
+E_{t}(V_{t+1}(m_{t+1},p_{t+1},f_{t+1}))=\sum_{j=1}^{N_{GH}}w_{j}^{\psi}\sum_{i=1}^{N_{GH}}w_{i}^{\xi}\sum_{k=1}^{N_{GH}}w_{k}^{\epsilon}V_{t+1}\left(m_{t+1}^{jik},p_{t+1}^{j},f_{t+1}\right)\label{eq:GH_integration}
+\end{equation}
 
 \end_inset
 
@@ -673,6 +950,10 @@ f_{t+1}=(1-\delta)f_{t}+i_{t}
 
 \begin_layout Subsection
 Computational aspects
+\end_layout
+
+\begin_layout Subsubsection
+Solving the model
 \end_layout
 
 \begin_layout Standard
@@ -716,8 +997,287 @@ We solve the model for the three different types of education group agents
  interpolation of the value function array.
 \end_layout
 
+\begin_layout Subsubsection
+Speeding up the code
+\end_layout
+
+\begin_layout Paragraph
+Numba and parallelization
+\end_layout
+
+\begin_layout Paragraph
+New 3D interpolant
+\end_layout
+
+\begin_layout Paragraph
+Precomputations
+\end_layout
+
 \begin_layout Subsection
-Notes
+Precomputing 
+\begin_inset Formula $E_{t}(V_{t+1}(s_{t+1}))$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+To avoid expensive evaluations of 
+\begin_inset Formula $E_{t}(V_{t+1}(s_{t+1}))$
+\end_inset
+
+ for all possible combinations of states and choices made in period 
+\begin_inset Formula $t$
+\end_inset
+
+, we construct a grid of the post-decision states
+\begin_inset Formula 
+\[
+\tilde{s}=(\tilde{R}_{\kappa}(f_{t+1})a_{t},p_{t},f_{t+1})
+\]
+
+\end_inset
+
+where 
+\begin_inset Formula $f_{t+1}=(1-\delta)f_{t}+i_{t}$
+\end_inset
+
+, 
+\begin_inset Formula $a_{t}=m_{t}+tr_{t}-c_{t}-\pi(i_{t})-c_{d}I(\kappa_{t}>0)$
+\end_inset
+
+, which we map into 
+\begin_inset Formula $E_{t}\left(V_{t+1}\left[\tilde{R}_{\kappa}(f_{t+1})a_{t}+Y_{t+1},p_{t},f_{t+1}\right]\right)$
+\end_inset
+
+.
+ Then, for each point in the state and choice space, we interpolate the
+ expectation of the next-period value function, which reduces the amount
+ of Gauss-Hermite integrations needed.
+ As there are three log-normal stochastic shocks to integrate out, this
+ increases the speed of the code significantly.
+ The process is described in Algorithm 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+ref{alg:precomp}
+\end_layout
+
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{algorithm}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+caption{Precomputations.
+ This algorithm is employed in each period $t$ to calculate the next-period
+ expected value for a given choice and state.}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+label{alg:precomp}
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+textbf{Initialize grid and precompute.} Let $ 
+\backslash
+{
+\backslash
+tilde{s}
+\backslash
+}_{i,j,k}^{I,J,K} $ be the post-decision state grid.
+ Use Eq.
+ (
+\backslash
+ref{eq:GH_integration}) to map this grid into $ W(
+\backslash
+tilde{s}_{t})=E_{t}
+\backslash
+left(V_{t+1}
+\backslash
+left[
+\backslash
+tilde{R}_{
+\backslash
+kappa}(f_{t+1})a_{t}+Y_{t+1},p_{t+1},f_{t+1}
+\backslash
+right]
+\backslash
+right)$, and then create a trilinear interpolant.
+ 
+\backslash
+
+\backslash
+ 
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{algorithmic} 
+\end_layout
+
+\begin_layout Plain Layout
+
+	
+\backslash
+STATE 
+\backslash
+textbf{Calculate next-period expected value:} 
+\backslash
+vspace{1mm}
+\end_layout
+
+\begin_layout Plain Layout
+
+		
+\backslash
+STATE 
+\backslash
+hskip0.5em for a given $s$ in state space:
+\end_layout
+
+\begin_layout Plain Layout
+
+		
+\backslash
+STATE 
+\backslash
+hskip1.5em for a given $c$ in choice space:
+\end_layout
+
+\begin_layout Plain Layout
+
+		
+\backslash
+STATE 
+\backslash
+hskip2.5em calculate post-decision state $
+\backslash
+tilde{s}$
+\end_layout
+
+\begin_layout Plain Layout
+
+		
+\backslash
+STATE 
+\backslash
+hskip2.5em interpolate $ W(
+\backslash
+tilde{s}_{t})=E_{t}(V_{t+1}(s_{t+1})) $ 
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{algorithmic}
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{algorithm}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Simulation
+\end_layout
+
+\begin_layout Standard
+Jeppe.
+\end_layout
+
+\begin_layout Standard
+We instantiate agents at age 
+\begin_inset Formula $25$
+\end_inset
+
+ with a random state vector 
+\begin_inset Formula $s_{25}=(m_{25},f_{25}=0,p_{25})$
+\end_inset
+
+ from which we simulate 
+\begin_inset Formula $N=10,000$
+\end_inset
+
+ outcomes.
+ After finding the choice vector at time 
+\begin_inset Formula $t$
+\end_inset
+
+ via 3D interpolation and majority voting, we update states according to
+ the model described in Section 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+ref{sec:setup}
+\end_layout
+
+\end_inset
+
+ with stochastic shocks drawn at random.
+\end_layout
+
+\begin_layout Subsection
+Notes 
 \end_layout
 
 \begin_layout Itemize
@@ -731,6 +1291,14 @@ Need to change R_tilde to a factor
 
 \begin_layout Itemize
 Need to change V_plus_interp to trilinear
+\end_layout
+
+\begin_layout Itemize
+Set 
+\begin_inset Formula $G=1$
+\end_inset
+
+ to let the permanent income process simply be a random walk.
 \end_layout
 
 \end_deeper

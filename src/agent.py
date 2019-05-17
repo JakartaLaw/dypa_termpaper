@@ -61,11 +61,11 @@ def tr():
 def pi(i):
     # constants are derived from the paper
     # return 0 * (i > 0)
-    return 50*(i**1.75)
+    # return 50*(i**1.75)
+    return 500 * (i > 0) # Binary
 
 #@njit
 def kappa_cost(kappa):
     # constants are derived from the paper
-
     # return 750 * (kappa > 0)
-    return 0 * (kappa > 0)
+    return 500 * (kappa > 0)

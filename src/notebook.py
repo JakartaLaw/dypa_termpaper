@@ -29,23 +29,23 @@ warnings.filterwarnings("ignore")
 # len(age_poly_hs)
 
 # Investigate state-space
-statespace = create_statespace(par)
-statespace
-
-# # Run Model
-m = Model()
-V_sol, C_sol = m.solve(par)
-# c, i, k
-C_sol[80]
-
+# statespace = create_statespace(par)
+# statespace
+#
+# # # Run Model
+# m = Model()
+# V_sol, C_sol = m.solve(par)
+# # c, i, k
+# C_sol[80]
+#
 
 # Test R return
 #
-# agent.R_riskful(5, par, 1)
-#
-#
-# agent.R_riskfree(par)
-# test_sp = create_statespace(par)
-# test_sp[30:32]
-#
-# test_sp[30:32]
+agent.R_riskful(0, par, 1)
+
+
+agent.R_riskfree(par)
+test_sp = create_statespace(par)
+test_sp[30:32]
+
+test_sp[30:32]
