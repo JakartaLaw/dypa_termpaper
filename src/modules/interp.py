@@ -82,22 +82,17 @@ def majority_3d(grid1,grid2,grid3,value, low_val, high_val, xi1,xi2,xi3,):
     j2 = binary_search(0,grid2.size,grid2,xi2)
     j3 = binary_search(0,grid3.size,grid3,xi3)
 
-    class1 = 0
+    class_high_count = 0
 
-    if grid1[j1+1] > cutoff:
-        class1 += 1
-    if grid1[j1] > cutoff:
-        class1 += 1
-    if grid2[j2+1] > cutoff:
-        class1 += 1
-    if grid2[j2] > cutoff:
-        class1 += 1
-    if grid3[j3+1] > cutoff:
-        class1 += 1
-    if grid3[j3] > cutoff:
-        class1 += 1
+    for g1 in range(2):
+        for g2 in range(2):
+            for g3 in range(2):
 
-    if class1 >= 3:
+                v = value[j1+g1,j2+g2,j3+g3]
+                if v > cutoff:
+                    class_high_count += 1
+
+    if class_high_count >= 4:
 
         res = high_val
 
