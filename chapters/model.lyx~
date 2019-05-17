@@ -705,28 +705,24 @@ hspace{4mm}
 \end_inset
 
 The costs functions for obtaining financial knowledge and investing in risky
- assets are both given by
+ assets are both fixed and given by
 \begin_inset Formula 
-\[
-\pi(i)=500\times\mathbf{1}(i>0)
-\]
+\begin{align*}
+\pi(i) & =500\times\mathbf{1}(i>0)\\
+c_{d} & =500
+\end{align*}
 
 \end_inset
 
-and the fixed cost of having risky assets is 
-\begin_inset Formula $c_{d}=750$
-\end_inset
-
-.
- The excess return function on financial literacy is linear in 
+The excess return function on financial literacy is linear in 
 \begin_inset Formula $f_{t}$
 \end_inset
 
 
 \begin_inset Formula 
-\[
-r(f_{t})=\bar{r}+\alpha f_{t},\:\alpha=\frac{r_{max}-r_{min}}{f_{max}-f_{min}}=\frac{0.04-0.00}{60-0}
-\]
+\begin{equation}
+r(f_{t})=\bar{r}+\alpha f_{t},\:\alpha=\frac{r_{max}-r_{min}}{f_{max}-f_{min}}=\frac{0.04-0.00}{65-0}\label{eq:risky_return_r}
+\end{equation}
 
 \end_inset
 
@@ -872,6 +868,211 @@ We set
 \end_inset
 
  in order to speed up the code.
+ Finally, we set all the stochastic shocks to have standard deviation 
+\begin_inset Formula $0.1$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Subsubsection
+How attractive is the risky asset on the calibrated parameters?
+\end_layout
+
+\begin_layout Standard
+The key interest of our analysis is how the endogenous interplay between
+ accumulation of financial literacy and investing in high-return assets
+ affects wealth inequality at the age of retirement.
+ Naturally, the degree of this difference is in large part explained by
+ the extent to which high-return assets outperform safe asset in terms of
+ expected returns, which can be hard to gaze from the parametric assumptions
+ made in 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:risky_return_r"
+
+\end_inset
+
+.
+ Figure 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+ref{graph:risky_safe}
+\end_layout
+
+\end_inset
+
+ plots the differences in cummulative return for a 
+\begin_inset Formula $100\%$
+\end_inset
+
+ investment in the risky asset (blue line) versus a 
+\begin_inset Formula $100\%$
+\end_inset
+
+ investment in the safe assets that yields a 
+\begin_inset Formula $2\%$
+\end_inset
+
+ annual return.
+ This is done over a 20 year horizon averaged over 
+\begin_inset Formula $1,000$
+\end_inset
+
+ individuals with shocks drawn from a log-normal with 0 mean and 0.1 standard
+ deviation for different levels of financial literaces 
+\begin_inset Formula $0,10,20,50$
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+hspace{4mm}
+\end_layout
+
+\end_inset
+
+It is evident that for low levels of financial literacy, the risky asset
+ is not very attractive as it provides a minor increase in expected return
+ at the cost of high volatility (shaded blue).
+ At the other end of the spectrum, for high levels of financial literacy,
+ the risky asset is really attractive and provides a very attractive alternative
+ to safe investment.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Risky vs.
+ safe return factors
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+label{graph:risky_safe}
+\end_layout
+
+\end_inset
+
+ 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{center}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename risky_vs_safe.png
+	scale 50
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{minipage}{0.90 
+\backslash
+textwidth}
+\end_layout
+
+\begin_layout Plain Layout
+
+{
+\backslash
+footnotesize{Note - This figure plots the cummulative return over a 20 year
+ time horizon for a 100 percent investment in the risky asset (blue line)
+ and a 100 percent investment in the safe asset (red line) averaged over
+ 1,000 individuals for different financial literacies.
+ The shaded blue is the 95
+\backslash
+% interval for the risky asset.
+   
+\backslash
+par}}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{minipage}
+\end_layout
+
+\end_inset
+
+ 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{center}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Subsection
