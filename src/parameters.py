@@ -12,7 +12,7 @@ mortality = create_mortality()
 psi = hermgauss_lognorm(n=4, sigma=0.1)
 xi = hermgauss_lognorm(n=4, sigma=0.1)
 eps = hermgauss_lognorm(n=4, sigma=0.1)
-max_age, start_age = 90, 25
+max_age, start_age = 90, 85
 
 age_poly_hs = create_age_poly_array('HS')
 n_hs = create_consumption_preference_array('HS')
@@ -25,13 +25,13 @@ parameters_initial = {
     "max_age" : max_age,
     "mortality" : mortality,
     "rho_u" : 0.96,
-    "m_min" : 2.0,
+    "m_min" : 10000.0,
     "m_max" : 500000.0, # Arbitrary set by Ditlev
     "Nm" : 8, # From paper (40)
     "m_tuning" : 0.3, # From paper
-    "p_min" : -5000,
-    "p_max" : 10000,
-    "Np" : 8, # From paper 25
+    "p_min" : -10000,
+    "p_max" : 20000,
+    "Np" : 6, # From paper 25
     "f_min" : 0.0,
     "f_max" : max_age - 25,
     "Nf" : 8, # From paper 25

@@ -101,6 +101,9 @@ class Model():
         #initialize V and C
         V, C = - np.inf, None
         choices = np.array(((0.0, 0.0), (1., 0.), (0., 0.55), (1., 0.55)))
+        # choices = np.array(((0.0, 0.0), (1., 0.), (0., 0.55), (1., 0.55),
+        #                     (0.0, 1.0), (1.0, 1.0), (0.5, 0.55), (0.5, 0.0), (0.5, 1.0)))
+
         m, f, p, t = state.m, state.f, state.p, state.t
         for i, kappa in choices:
 

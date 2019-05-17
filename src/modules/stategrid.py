@@ -2,7 +2,7 @@ import numpy as np
 
 def create_m_grid(par):
     # Grid assets
-    grid_m_temp = np.linspace(par.m_min, par.m_max**par.m_tuning, par.Nm)
+    grid_m_temp = np.linspace(par.m_min**par.m_tuning, par.m_max**par.m_tuning, par.Nm)
     grid_m = grid_m_temp ** (1/par.m_tuning)
     return grid_m
 
