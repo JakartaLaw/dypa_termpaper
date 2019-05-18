@@ -8,7 +8,6 @@ from numba.types import float64, int64, double
 #@njit
 #@njit((double, double, double))
 def utility(c, n, rho_u):
-    # not conditioning on education level differences yet
     return n * ( (c/n)**(1-rho_u) ) /  (1-rho_u)
 #
 # @njit
@@ -62,7 +61,7 @@ def pi(i):
     # constants are derived from the paper
     # return 0 * (i > 0)
     # return 50*(i**1.75)
-    return 500 * (i > 0) # Binary
+    return 750 * (i > 0) # Binary
 
 #@njit
 def kappa_cost(kappa):

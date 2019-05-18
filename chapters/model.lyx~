@@ -112,11 +112,11 @@ tabs-within-sections
 \begin_body
 
 \begin_layout Abstract
-The aim of this paper is to set up a dynamic, structural model that generates
- wealth inequality from differences in financial literacy over a lifetime
- and thoroughly conduct a robustness-check on the influence of parametric
- choices on the implied inequality.
- To do so, we borrow the model from 
+The aim of this paper is to understand how the influence of financial literacy
+ and access to sophisticated technologies affect wealth inequality between
+ education groups at the time of retirement.
+ To do so, we set up a dynamic structural model which is borrowed in large
+ part from 
 \begin_inset ERT
 status open
 
@@ -129,9 +129,9 @@ cite{lusardi2017optimal}
 
 \end_inset
 
- which is reformulated to incorporate elements from the Deaton-Caroll Buffer-sto
-ck model and additionally it is also simplified in order to reduce the computati
-onal burden of solving the model.
+ that we reformulate to incorporate elements from the Deaton-Caroll Buffer-stock
+ model and to fit better to a Danish context.
+ We find that ...
 \end_layout
 
 \begin_layout Section
@@ -142,8 +142,20 @@ Introduction
 What explains wealth inequality between socioeconomic groups at retirement?
  While differences in earnings and their subsequent accumulated returns
  over the life-time can account for a large share of the differences in
- wealth in a simple life cycle model, it can not explain the differences
- in ratios of income and wealth 
+ wealth in a simple life cycle model, it can not explain 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+textit{all}
+\end_layout
+
+\end_inset
+
+ of the differences observed wealth inequality 
 \begin_inset ERT
 status open
 
@@ -201,14 +213,13 @@ hspace{4mm}
 
 \end_inset
 
-This mechanism is interesting, but the estimated effect of 
-\begin_inset Formula $30-40\%$
-\end_inset
-
- is very large and likely vulnerable to changes in model assumptions, which
- this paper will investigate.
- What happens when we change the cost function on acquiring financial knowledge?
- What happens...
+We use a large chunk of the infrastructure from this model to conduct policy
+ simulations on the effects of changing the costs of obtaining and using
+ financial literacy on wealth inequality at the age of retirement.
+ We believe it is important to shed light on the implications of easier/cheaper
+ access to obtaining financial knowledge, as this may aid policy-makers
+ with a channel to reduce wealth inequality at retirement.
+ We find that...
 \end_layout
 
 \begin_layout Section
@@ -332,10 +343,7 @@ We model agents from age
  how much to consume, whether to invest in financial literacy or not, and
  how much to invest in a risky asset so as to maximize the sum of discounted
  utilities.
- Formally, let the state space be given by 
-\end_layout
-
-\begin_layout Standard
+ Formally, let the state space be given by
 \begin_inset Formula 
 \[
 s_{t}=(m_{t},p_{t},f_{t},e)
@@ -413,14 +421,10 @@ reference "eq:asset_acc"
 \end_inset
 
  is the accummulation of assets with 
-\begin_inset Formula $m_{t}$
-\end_inset
-
- being cash-on-hand, 
 \begin_inset Formula $tr_{t}$
 \end_inset
 
- government transfers that ensures a minimum income level (see 
+ being government transfers that ensures a minimum income level (see 
 \begin_inset CommandInset ref
 LatexCommand eqref
 reference "eq:transfers"
@@ -500,26 +504,26 @@ reference "eq:return"
 \begin_inset Formula $t$
 \end_inset
 
-, which is a weighted sum of risk-free return factor 
+, which is a weighted sum of the risk-free return factor 
 \begin_inset Formula $\bar{R}$
 \end_inset
 
- and stochastic (stocks) return 
+ and the stochastic (stocks) return 
 \begin_inset Formula $\tilde{R}(f_{t+1})$
 \end_inset
 
-, which is function in 
+, which in turn is given 
 \begin_inset CommandInset ref
 LatexCommand eqref
 reference "eq:stoch_return"
 
 \end_inset
 
- of the risk-free rate 
+ as a function of the risk-free rate 
 \begin_inset Formula $\bar{r}$
 \end_inset
 
- and of 
+ and 
 \begin_inset Formula $r(f_{t})$
 \end_inset
 
@@ -689,6 +693,57 @@ where
 
  is then the household equivalence scale for a household with two adults
  and a child.
+ This parametric formulation induces an higher uttility the larger the household
+ size.
+ The set 
+\begin_inset Formula $\{j_{e,t},k_{e,t}\}_{t=25,e=HS,College}^{90}$
+\end_inset
+
+ is calibrated directly from 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{center}
+\end_layout
+
+\end_inset
+
+ https://www.census.gov/data/tables/2016/demo/families/cps-2016.html, Table
+ AVG1 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{center}
+\end_layout
+
+\end_inset
+
+where - for simplicity - 
+\begin_inset Formula $\{j_{e,t},k_{e,t}\}_{t=25,e=<HS}^{90}$
+\end_inset
+
+ is multiplied up with a factor 
+\begin_inset Formula $1.4$
+\end_inset
+
+ for the children 
+\begin_inset Formula $k$
+\end_inset
+
+, as the census data shows that low-educated households on-average have
+ 
+\begin_inset Formula $1.4$
+\end_inset
+
+ more children than the other groups.
 \end_layout
 
 \begin_layout Standard
@@ -708,17 +763,26 @@ The costs functions for obtaining financial knowledge and investing in risky
  assets are both fixed and given by
 \begin_inset Formula 
 \begin{align*}
-\pi(i) & =500\times\mathbf{1}(i>0)\\
-c_{d} & =500
+\pi(i) & =\varOmega\times\mathbf{1}(i>0)\\
+c_{d} & =\Gamma
 \end{align*}
 
 \end_inset
 
-The excess return function on financial literacy is linear in 
+
+\end_layout
+
+\begin_layout Standard
+where we vary 
+\begin_inset Formula $(\Omega,\Gamma)$
+\end_inset
+
+ in our policy simulations.
+ The excess return function on financial literacy is linear in 
 \begin_inset Formula $f_{t}$
 \end_inset
 
-
+ and given by
 \begin_inset Formula 
 \begin{equation}
 r(f_{t})=\bar{r}+\alpha f_{t},\:\alpha=\frac{r_{max}-r_{min}}{f_{max}-f_{min}}=\frac{0.04-0.00}{65-0}\label{eq:risky_return_r}
@@ -765,7 +829,7 @@ where
 \end_inset
 
 .
- We estimate the education-specific income process 
+ Finally, we estimate the education-specific income process 
 \begin_inset Formula $g_{e}(t)$
 \end_inset
 
@@ -790,12 +854,41 @@ cite{lusardi2017optimal}
 \begin_inset Formula $\rho_{e,t}$
 \end_inset
 
- from http://www.bandolier.org.uk/booth/Risk/dyingage.html.
- In the initial model, we also set transfers 
-\begin_inset Formula $tr_{t}$
+ from 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{center}
+\end_layout
+
 \end_inset
 
- to zero for simplicity.
+ http://www.bandolier.org.uk/booth/Risk/dyingage.html 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{center}
+\end_layout
+
+\end_inset
+
+ For simplicity, we set 
+\begin_inset Formula $tr_{t}=20,000$
+\end_inset
+
+ for all 
+\begin_inset Formula $t\geq65$
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Subsubsection
@@ -831,7 +924,7 @@ We set
 \end_inset
 
  in the interval 
-\begin_inset Formula $[-5,000;10,000]$
+\begin_inset Formula $[-10,000;20,000]$
 \end_inset
 
  and 
@@ -868,7 +961,8 @@ We set
 \end_inset
 
  in order to speed up the code.
- Finally, we set all the stochastic shocks to have standard deviation 
+ Finally, we set all the log-normal stochastic shocks to have standard deviation
+ 
 \begin_inset Formula $0.1$
 \end_inset
 
@@ -894,7 +988,7 @@ reference "eq:risky_return_r"
 \end_inset
 
 .
- Figure 
+ To illustrate, Figure 
 \begin_inset ERT
 status open
 
@@ -950,8 +1044,7 @@ It is evident that for low levels of financial literacy, the risky asset
  is not very attractive as it provides a minor increase in expected return
  at the cost of high volatility (shaded blue).
  At the other end of the spectrum, for high levels of financial literacy,
- the risky asset is really attractive and provides a very attractive alternative
- to safe investment.
+ the risky asset provides a very attractive alternative to safe investment.
 \end_layout
 
 \begin_layout Standard
@@ -1093,7 +1186,7 @@ E_{t}[V_{t+1}(m_{t+1},p_{t+1},f_{t+1})]=\int_{\psi_{t}}\int_{\xi_{t}}\int_{\epsi
 
 \begin_layout Standard
 which can be done via Gauss-Hermite integration as all shocks are log-normally
- distributed.
+ distributed and assumed independent.
  We draw 
 \begin_inset Formula $N_{GH}=5$
 \end_inset

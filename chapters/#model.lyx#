@@ -689,6 +689,55 @@ where
 
  is then the household equivalence scale for a household with two adults
  and a child.
+ 
+\begin_inset Formula $\{j_{e,t},k_{e,t}\}_{t=25,e=HS,College}^{90}$
+\end_inset
+
+ are calibrated directly from 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{center}
+\end_layout
+
+\end_inset
+
+ https://www.census.gov/data/tables/2016/demo/families/cps-2016.html, Table
+ AVG1 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{center}
+\end_layout
+
+\end_inset
+
+ using simple interpolation bewhere - for simplicity - 
+\begin_inset Formula $\{j_{e,t},k_{e,t}\}_{t=25,e=<HS}^{90}$
+\end_inset
+
+ is multiplied up with a factor 
+\begin_inset Formula $1.4$
+\end_inset
+
+ for the children 
+\begin_inset Formula $k$
+\end_inset
+
+ because the census data shows that low-educated households on-average have
+ 
+\begin_inset Formula $1.4$
+\end_inset
+
+ more children than the other groups.
 \end_layout
 
 \begin_layout Standard
@@ -790,7 +839,32 @@ cite{lusardi2017optimal}
 \begin_inset Formula $\rho_{e,t}$
 \end_inset
 
- from http://www.bandolier.org.uk/booth/Risk/dyingage.html.
+ from 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{center}
+\end_layout
+
+\end_inset
+
+ http://www.bandolier.org.uk/booth/Risk/dyingage.html 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{center}
+\end_layout
+
+\end_inset
+
  In the initial model, we also set transfers 
 \begin_inset Formula $tr_{t}$
 \end_inset
@@ -894,7 +968,7 @@ reference "eq:risky_return_r"
 \end_inset
 
 .
- Figure 
+ To illustrate, Figure 
 \begin_inset ERT
 status open
 
@@ -907,18 +981,57 @@ ref{graph:risky_safe}
 
 \end_inset
 
+ plots the differences in cummulative return for a 
+\begin_inset Formula $100\%$
+\end_inset
 
+ investment in the risky asset (blue line) versus a 
+\begin_inset Formula $100\%$
+\end_inset
+
+ investment in the safe assets that yields a 
+\begin_inset Formula $2\%$
+\end_inset
+
+ annual return.
+ This is done over a 20 year horizon averaged over 
+\begin_inset Formula $1,000$
+\end_inset
+
+ individuals with shocks drawn from a log-normal with 0 mean and 0.1 standard
+ deviation for different levels of financial literaces 
+\begin_inset Formula $0,10,20,50$
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+hspace{4mm}
+\end_layout
+
+\end_inset
+
+It is evident that for low levels of financial literacy, the risky asset
+ is not very attractive as it provides a minor increase in expected return
+ at the cost of high volatility (shaded blue).
+ At the other end of the spectrum, for high levels of financial literacy,
+ the risky asset provides a very attractive alternative to safe investment.
 \end_layout
 
 \begin_layout Standard
 \begin_inset Float figure
 wide false
 sideways false
-status open
-
-\begin_layout Plain Layout
-
-\end_layout
+status collapsed
 
 \begin_layout Plain Layout
 \begin_inset Caption Standard

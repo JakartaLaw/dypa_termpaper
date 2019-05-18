@@ -9,9 +9,9 @@ class Simulator(Model):
 
     NUMPY_SEED = 43
     SHOCK_SCALE = 0.1
-    M_INITIAL_MEAN = 50000
+    M_INITIAL_MEAN = 25000
     M_INITIAL_SCALE = 25000
-    M_MINIMUM = 10000
+    M_MINIMUM = 0
     FINANCIAL_LIT_START = 0
     PERM_INCOME_MEAN = 10000
     PERM_INCOME_SCALE = 4000
@@ -83,7 +83,7 @@ class Simulator(Model):
 
         for ix, t in enumerate(range(par.start_age, par.max_age + 1)):
 
-            print("In period: ", t, "ix: ", ix)
+            #print("In period: ", t, "ix: ", ix)
 
             #interpolators
             interp_c, interp_kappa, interp_i = cls.create_interpolators(C_sol,

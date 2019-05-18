@@ -169,9 +169,11 @@ class Model():
         # 1) (V_star_interpolant) interpolant over næste periode mellem m_grid og v_star_t+1
         for t in reversed(range(par.start_age, par.max_age)):
 
-            print("======== BEGINNING ============")
-            print('Solution at time step t: ', t, ', time is: ', datetime.datetime.utcnow())
-            tic = time.time()
+            print('Solution is at time step t =  ', t, end = "\r", flush = True )
+            #print("======== BEGINNING ============")
+            #print('Solution at time step t: ', t, ', time is: ', datetime.datetime.utcnow())
+
+            #tic = time.time()
             # print('Solutions is at time step', t, ". Elapsed time:", tic - start_time, end = "\r")
             #print('Solutions is at time step', t, end = "\r")
 
@@ -186,8 +188,8 @@ class Model():
 
             for s_ix, s in enumerate(statespace):
                 # print(NUMBER_OF_ITERATIONS)
-                if s_ix % 100 == 0:
-                    print(s_ix,  'time is: ', datetime.datetime.utcnow())
+                # if s_ix % 100 == 0:
+                #     print(s_ix,  'time is: ', datetime.datetime.utcnow())
                 m, f, p = s[0], s[1], s[2]
                 state = StateTuple(m, f, p, t)
                 V, C = self.find_V_for_choices(state, par, interpolant)
@@ -195,8 +197,10 @@ class Model():
 
             Vstar, Cstar = Vstar_plus, Cstar_plus
             V_solution[t], C_solution[t] = Vstar, Cstar
-            print("======== ENDING ===========")
-            toc = time.time()
+            #print("======== ENDING ===========")
+            #toc = time.time()
             #print(f' t = {t} solved in {toc-tic:.1f} secs')
+
+
 
         return V_solution, C_solution

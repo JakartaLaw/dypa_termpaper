@@ -12,7 +12,7 @@ mortality = create_mortality()
 psi = hermgauss_lognorm(n=4, sigma=0.1)
 xi = hermgauss_lognorm(n=4, sigma=0.1)
 eps = hermgauss_lognorm(n=4, sigma=0.1)
-max_age, start_age = 90, 85
+max_age, start_age = 90, 25
 
 age_poly_hs = create_age_poly_array('HS')
 n_hs = create_consumption_preference_array('HS')
@@ -47,10 +47,6 @@ parameters_initial = {
 }
 
 hs_params = {key : value for key, value in parameters_initial.items()}
-
-# For debugging
-# hs_params["n"] = np.ones(90)
-# hs_params["age_poly"] = np.ones(90)
 
 hs_params["n"] = n_hs
 hs_params["age_poly"] = age_poly_hs
