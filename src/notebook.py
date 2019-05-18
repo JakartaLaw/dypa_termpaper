@@ -17,6 +17,14 @@ from modules import stategrid
 import warnings
 warnings.filterwarnings("ignore")
 
+agent.utility(70000, 1, 1000)
+
+# from modules.utils import create_mortality
+#
+# test = create_mortality()
+#
+# test[65]
+# test[23]
 # age_poly_hs = create_age_poly_array('HS')
 # n_hs = create_consumption_preference_array('HS')
 #

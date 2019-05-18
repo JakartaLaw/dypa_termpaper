@@ -291,11 +291,7 @@ We model agents from age
 \begin_inset Formula $e\in\{\text{Less than highschool, High school, College+}\}$
 \end_inset
 
-, which determines diffences in mortality rates 
-\begin_inset Formula $\rho_{e,t}$
-\end_inset
-
-, household utility functions 
+, which determines diffences in household utility functions 
 \begin_inset Formula $n_{e,t}u(c_{t}/n_{e,t})$
 \end_inset
 
@@ -303,7 +299,19 @@ We model agents from age
 \begin_inset Formula $g_{e}(t)$
 \end_inset
 
- that are all known to the agent.
+ that are all known to the agent
+\begin_inset Foot
+status collapsed
+
+\begin_layout Plain Layout
+In the original model, the mortality rate also depended on educational backgroun
+d.
+ We abstain from doing so, as we have not been able to find data for this.
+\end_layout
+
+\end_inset
+
+.
  Similar to the Deaton-Caroll Buffer-stock model, each agent has a stochastic
  permanent income process 
 \begin_inset Formula $p_{t}$
@@ -1597,6 +1605,19 @@ Set
 \end_inset
 
  to let the permanent income process simply be a random walk.
+\end_layout
+
+\begin_layout Itemize
+Remember to have a discussion on 
+\begin_inset Formula $\log(u)$
+\end_inset
+
+ vs.
+ CRRA with 
+\begin_inset Formula $\sigma=1.6$
+\end_inset
+
+
 \end_layout
 
 \end_deeper
