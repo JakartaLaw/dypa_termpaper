@@ -66,7 +66,7 @@ class Simulator(Model):
             #draw start value for cash-on-hand for person
             m_start = np.random.normal(cls.M_INITIAL_MEAN, cls.M_INITIAL_SCALE)
             if m_start < cls.M_MINIMUM:
-                m_start = 10000
+                m_start = cls.M_MINIMUM
 
             # draw start value for permanent income (for person)
             p_start = np.random.normal(cls.PERM_INCOME_MEAN, cls.PERM_INCOME_SCALE)
